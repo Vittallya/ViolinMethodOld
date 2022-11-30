@@ -4,16 +4,16 @@ using System;
 
 namespace DAL.Repositories
 {
-    public class LiteDbStore : IStore<ILiteDatabase>
+    public class LiteDbStore : IStore
     {
-        public ILiteDatabase Database { get; }
+        public object Database { get; }
 
         public LiteDbStore(ILiteDatabase database, string priemName = null, string priemGroupName = null, string notesName = null)
         {
             Database = database;
-            Priems = new LiteDbRepo<Priem>(database, priemName);
-            PriemGroups = new LiteDbRepo<PriemGroup>(database, priemGroupName);
-            Notes = new LiteDbRepo<Note>(database, notesName);
+            Priems = new LiteDbRepo<Priem>(this, database, priemName);
+            PriemGroups = new LiteDbRepo<PriemGroup>(this, database, priemGroupName);
+            Notes = new LiteDbRepo<Note>(this, database, notesName);
         }
 
         public IStoreRepo<Priem> Priems { get; }

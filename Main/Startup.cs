@@ -12,6 +12,7 @@ using DAL.Repositories;
 using AutoMapper;
 using DAL.Models;
 using Main.ViewModels;
+using BLL;
 
 namespace Main
 {
@@ -29,8 +30,8 @@ namespace Main
         {
             services.AddTransient(x => new Mapper(new MapperConfiguration(x =>
             {
-                x.CreateMap<Note, NoteModel>();
-                x.CreateMap<NoteModel, Note>();
+                x.CreateMap<Note, NoteViewModel>();
+                x.CreateMap<NoteViewModel, Note>();
 
                 x.CreateMap<PageInfo, PageInfoModel>();
                 x.CreateMap<PageInfoModel, PageInfo>();
@@ -51,10 +52,12 @@ namespace Main
             var liteDbOpts = Configuration.GetSection(LiteDbConfigOptions.Position).Get<LiteDbConfigOptions>();
             services.AddSingleton<ILiteDatabase>(x => new LiteDatabase(liteDbOpts.DbLocation, new LiteDbMapper()));
 
-            services.AddSingleton<IStore<ILiteDatabase>>(x =>
+            services.AddSingleton<IStore>(x =>
             {
                 return new LiteDbStore(x.GetRequiredService<ILiteDatabase>());
             });
+
+            services.AddTransient<INoteService, NoteService>();
 
             services.AddIdentity<IdentityUser, IdentityRole>(opts =>
             {

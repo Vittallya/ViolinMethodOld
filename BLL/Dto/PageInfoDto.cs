@@ -1,13 +1,13 @@
 ﻿using DAL.Models;
 using System.Collections.Generic;
 
-namespace Main.ViewModels
+namespace BLL.Dto
 {
-    public class PageInfoModel
+    public class PageInfoDto
     {
         public int PageNumber { get; set; }
         public int DiffLvl { get; set; }
         public string Recs { get; set; }
-        public List<PriemModel> Priems { get; set; }
+        public List<PriemDto> Priems { get; set; }
     }
 }

@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Views\" />
     <Folder Include="wwwroot\json\" />
   </ItemGroup>
 

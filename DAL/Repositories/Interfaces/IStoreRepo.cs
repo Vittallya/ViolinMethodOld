@@ -8,6 +8,7 @@ namespace DAL.Repositories
 {
     public interface IStoreRepo<T>
     {
+        public IStore Store { get; }
         string TableName { get; }
         IEnumerable<T> GetAll();
         IEnumerable<T> GetAllClear();

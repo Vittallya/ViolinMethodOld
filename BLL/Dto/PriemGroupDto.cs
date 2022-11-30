@@ -1,6 +1,6 @@
-﻿namespace Main.ViewModels
+﻿namespace BLL.Dto
 {
-    public class PriemGroupModel
+    public class PriemGroupDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
