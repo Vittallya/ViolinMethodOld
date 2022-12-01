@@ -1,5 +1,6 @@
 ﻿using DAL.Models;
 using LiteDB;
+using System;
 using System.Collections.Generic;
 
 namespace DAL.Repositories
@@ -19,6 +20,16 @@ namespace DAL.Repositories
             return db.GetCollection<Note>().
                 Include(BsonExpression.Create("$.PageInfo[*].Priems[*]")).
                 FindById(id);
+        }
+
+        public static IEnumerable<Note> GetNotes(this LiteDbRepo<Note> noteRepo, int take, int skip, IEnumerable<Guid> guids = null, IEnumerable<int> priems = null)
+        {
+            var db = noteRepo.Database;
+            return db.GetCollection<Note>(noteRepo.TableName).
+                Query().
+                Skip(skip).
+                Limit(take).
+                ToEnumerable();
         }
     }
 }

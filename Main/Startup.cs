@@ -13,6 +13,7 @@ using AutoMapper;
 using DAL.Models;
 using Main.ViewModels;
 using BLL;
+using BLL.Dto;
 
 namespace Main
 {
@@ -33,14 +34,14 @@ namespace Main
                 x.CreateMap<Note, NoteViewModel>();
                 x.CreateMap<NoteViewModel, Note>();
 
-                x.CreateMap<PageInfo, PageInfoModel>();
-                x.CreateMap<PageInfoModel, PageInfo>();
+                x.CreateMap<PageInfo, PageInfoDto>();
+                x.CreateMap<PageInfoDto, PageInfo>();
 
-                x.CreateMap<Priem, PriemModel>();
-                x.CreateMap<PriemModel, Priem>();
+                x.CreateMap<Priem, PriemDto>();
+                x.CreateMap<PriemDto, Priem>();
 
-                x.CreateMap<PriemGroup, PriemGroupModel>();
-                x.CreateMap<PriemGroupModel, PriemGroup>();
+                x.CreateMap<PriemGroup, PriemGroupDto>();
+                x.CreateMap<PriemGroupDto, PriemGroup>();
 
             })));
 

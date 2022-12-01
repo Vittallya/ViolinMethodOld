@@ -1,0 +1,68 @@
+﻿@model IEnumerable<NoteViewModel>
+
+<table id="notesTable" class="table table_sort">
+    <thead>
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                Дата публикации
+            </th>
+            <th>
+                Дата посл. редакт.
+            </th>
+            <th>
+                Файл
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 1;
+        }
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @item.PublishDate.ToString("dd.MM.yy HH:mm:ss")
+                </td>
+                <td>
+                    @(item.LastUpdate?.ToString("dd.MM.yy HH:mm:ss") ?? "—")
+                </td>
+                <td id="table-td-@item.Id">
+                    @if (item.FileName != null)
+                    {
+                        <div class="tooltip_1">
+                            <a href="/notefiles/@item.Id/@System.IO.Path.GetFileName(item.FileName)">@System.IO.Path.GetFileName(item.FileName)</a>
+                            <img class="tooltiptext_1" src="/notefiles/@item.Id/images/@(item.ShowPageNumber).jpg" />
+                        </div>
+                    }
+                    else
+                    {
+                        <span>—</span>
+                    }
+
+                </td>
+                <td>
+                    <input type="button"
+                           id="bt-edit"
+                           class="btn-link bg-transparent border-0 bt_edit_note"
+                           data-id="@item.Id" value="Ред."> |
+                    <input type="button" onclick="onDetails(this)" class="btn-link bg-transparent border-0" asp-action="Delete" data-id="@item.Id" value="Детали"> |
+                    <input type="button"
+                           class="btn-link bg-transparent border-0"
+                           onclick="onDelete(this)"
+                           asp-action="Delete"
+                           data-num="@(i++)"
+                           data-id="@item.Id" value="Удал.">
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

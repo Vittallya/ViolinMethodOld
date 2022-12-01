@@ -3,12 +3,13 @@ using BLL;
 using BLL.Dto;
 using DAL.Repositories;
 using Main.ViewModels;
+using Main.ViewModels.Note;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Main.Areas.Controllers
 {
@@ -26,10 +27,35 @@ namespace Main.Areas.Controllers
             this.mapper = mapper;
         }
 
-        [Route("/admin/notes")]
+        [Route("/admin/note")]
         public ActionResult Index()
         {
-            return View();
+            IndexViewModel model = new IndexViewModel
+            {
+                CurrentPage = 1,
+                SelectedView = "TableView",
+                TakeCount = 15,
+                Views = new string[] { "TableView", "TileView" }
+            };
+
+            return View(model);
+        }
+
+        public ActionResult GetNotes(IndexViewModel model)
+        {
+            int skip = (model.CurrentPage - 1) * model.TakeCount;
+
+            IEnumerable<Guid> noteGuids = model?.Filter?.SelectedGuids;
+            IEnumerable<int> priems = model?.Filter?.SelectedPriems;
+
+            var notes = noteService.
+                GetNotes(model.TakeCount, skip, noteGuids, priems).
+                Select(x => mapper.Map<NoteDto, NoteViewModel>(x));
+
+            if (IsAjax(Request))
+                return PartialView(model.SelectedView, notes);
+
+            return View(model.SelectedView, notes);
         }
 
         // GET: NoteController/Details/5
@@ -39,26 +65,6 @@ namespace Main.Areas.Controllers
             return View();
         }
 
-        // GET: NoteController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: NoteController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: NoteController/Edit/5
         public ActionResult Edit(Guid? id = null)

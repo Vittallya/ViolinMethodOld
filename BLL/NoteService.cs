@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BLL
@@ -30,7 +31,12 @@ namespace BLL
 
         public IEnumerable<NoteDto> GetNotes(int take, int skip, IEnumerable<Guid> noteIds = null, IEnumerable<int> priems = null)
         {
-            throw new NotImplementedException();
+            if(store.Notes is LiteDbRepo<Note> repo)
+            {
+                var notes = repo.GetNotes(take, skip);
+                return notes.Select(x => mapper.Map<Note, NoteDto>(x));
+            }
+            throw new ArgumentException("choosen store that isn`t lite database");
         }
 
         public Task InsertOrUpdateAsync(NoteDto model, Guid? guid = null)

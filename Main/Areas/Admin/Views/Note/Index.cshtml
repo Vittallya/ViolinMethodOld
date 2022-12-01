@@ -1,0 +1,150 @@
+﻿@model IndexViewModel
+
+<link rel="stylesheet" href="~/css/note/tableView.css" />
+<link rel="stylesheet" href="~/css/note/tooltip.css" />
+
+<input type="checkbox" id="filter-toggle" class="d-none" />
+<label class="btn btn-secondary" id="filter-toggle-label" for="filter-toggle">
+    Фильтр
+    <span class="badge" id="filter-count"></span>
+</label>
+<div class="row">
+
+
+    <div class="rounded-sm col-xm-12 col-sm-12 col-md-12 col-12 col-lg-3 accordion" id="filterContainer">
+
+
+        <div>
+            <button class="btn d-none" id="bt-accept-filter">adfgadfg</button>
+        </div>
+
+        <div id="filterContent">
+        </div>
+
+
+
+    </div>
+    <div class="table col-xm-12 col-sm-12 col-md-12 col-12 col-lg-12" id="table-div">
+
+
+        <div class="d-flex flex-wrap justify-content-start">
+
+
+            <div class="d-flex flex-wrap justify-content-start" id="filters-place">
+
+            </div>
+        </div>
+        <hr />
+
+
+        <div id="table-panel" class="row">
+
+            <div class="col-xs-4 col-md-3 col-sm-12 col-lg-3 d-flex" style="margin: 5px auto">
+                <span>
+                    Найдено записей:
+                </span>
+
+                <div class="font-weight-bold" style="margin-left: 5px">
+                    <span id="finded-text"></span>
+                </div>
+            </div>
+
+            <div class="col-xs-4 col-md-3 col-sm-12 col-lg-3 d-flex" style="margin: 5px auto">
+                <span>
+                    Режим отображения:
+                </span>
+                <div style="margin: 0 10px" class="font-weight-bold">
+                    <input class="d-none inp-display-mode" id="input-table-mode-1" onchange="onModeChange(this)" name="display" type="radio" />
+                    <label for="input-table-mode-1">
+
+                        <svg width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path d="M448 32C483.3 32 512 60.65 512 96V416C512 451.3 483.3 480 448 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H448zM152 96H64V160H152V96zM208 160H296V96H208V160zM448 96H360V160H448V96zM64 288H152V224H64V288zM296 224H208V288H296V224zM360 288H448V224H360V288zM152 352H64V416H152V352zM208 416H296V352H208V416zM448 352H360V416H448V352z" />
+                        </svg>
+                    </label>
+                </div>
+
+                <div class="font-weight-bold">
+                    <input class="d-none inp-display-mode" id="input-table-mode-2" onchange="onModeChange(this)" name="display" type="radio" />
+                    <label for="input-table-mode-2">
+                        <svg width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path d="M448 32C483.3 32 512 60.65 512 96V416C512 451.3 483.3 480 448 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H448zM448 96H288V224H448V96zM448 288H288V416H448V288zM224 224V96H64V224H224zM64 416H224V288H64V416z" />
+                        </svg>
+                    </label>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-3 col-sm-12 col-lg-3 d-flex" style="margin: 5px auto">
+                <div>
+                    Показывать по:
+                </div>
+                <div style="margin-left: 15px">
+                    <select class="form-control drop"
+                            style="padding: 2px 5px; height:auto"
+                            id="sel-limit" onchange="onlimitchanged(this)">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="40">40</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-3 col-sm-12 col-lg-3 d-flex" style="margin: 5px auto">
+                @*<a class="btn btn-primary" asp-action="Edit">
+                        add
+                    </a>*@
+
+                <button id="bt-add" class="btn btn-primary">
+                    Добавить ноты
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="20" style="margin-left: 7px; fill:#fff">
+                        <path d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z" />
+                    </svg>
+                </button>
+
+            </div>
+        </div>
+
+        <div id="view_root">
+
+        </div>
+        <p>
+            <nav id="pagination-nav" aria-label="Page navigation example">
+                <ul class="pagination" id="pagination-place">
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+
+            <div class="d-flex justify-content-center page-links-div">
+
+            </div>
+        </p>
+
+    </div>
+</div>
+
+@section Scripts{
+
+    <script type="text/javascript" src="~/js/notes/index.js"></script>
+    <script>
+    $(() => {
+        let total = Number( @Model.TotalCount)
+        let takeCount = Number(@Model.TakeCount)
+        let curPage = Number(@Model.CurrentPage)
+        let viewName = "@Model.SelectedView"
+        initIndex(curPage, total, takeCount, viewName)
+        loadView(null, data => {
+
+            if (viewName == "TableView") {
+                //document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
+                $(".table_sort thead").each((i, e) => e.addEventListener('click', () => getSort(event)))
+            }
+
+        })
+    })
+    </script>
+}
+
