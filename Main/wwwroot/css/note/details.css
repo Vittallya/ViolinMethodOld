@@ -1,0 +1,170 @@
+﻿@media screen and (max-width: 991px) {
+
+    #slider-1 {
+        display: block;
+    }
+
+    #slider_2 {
+        display: none;
+    }
+
+    .div_details_descr {
+        margin: 15px auto 0px auto;
+    }
+}
+
+@media screen and (min-width: 992px) {
+
+
+    #slider-1 {
+        display: none;
+    }
+
+    #slider_2 {
+        display: flex;
+    }
+
+    .div_details_descr {
+        margin: 0px auto 0px auto;
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    #slider-1 {
+        display: block;
+    }
+
+    #slider_2 {
+        display: none;
+    }
+
+    .div-header > div:nth-child(1) > a > span {
+        display: none;
+    }
+
+
+    .div_details_section {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 600px) {
+
+    .div_details_section {
+        display: flex;
+    }
+}
+
+.download-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 25px;
+}
+
+#bt-download-label {
+    padding: 10px 8%;
+    color: black;
+    font-weight: 600;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+    #bt-download-label:hover {
+        background-color: inherit;
+        box-shadow: 0px 0px 2px 3px rgb(175 175 175 / 50%);
+    }
+
+.details {
+    background-color: white
+}
+
+body {
+    background-color: rgb(240,240,240);
+}
+
+
+.div_details_section {
+    margin: 15px 0px;
+}
+
+    .div_details_section h5 {
+        width: 250px;
+        font-weight: 500;
+    }
+
+.div_details_hashtags {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 15px;
+}
+
+.div_details_hashtag {
+    padding: 5px 10px;
+    background-color: white;
+    /*font-size: 1.0vw;*/
+    font-size: 17px;
+    border-radius: 10px;
+    min-width: 50px;
+    text-align: center;
+    font-weight: 400;
+}
+
+.div_details_image {
+}
+
+.canvasImg {
+    width: 100%
+}
+
+.div_details_descr {
+    padding: 10px 15px;
+    border-radius: 7px;
+    width: fit-content;
+    box-shadow: 0px 0px 3px 3px #cfcccc75;
+}
+
+.div_details_images {
+    overflow-x: hidden;
+    overflow-y: auto;
+    direction: rtl;
+}
+
+    .div_details_images > div:nth-child(2n) {
+        margin: 10px 0px;
+    }
+
+.div_details_image img {
+    width: 100%
+}
+
+.div-header {
+    padding: 5px 10px 15px 10px;
+}
+
+    .div-header > div:nth-child(1) {
+        position: absolute;
+    }
+
+    .div-header > div:nth-child(2) {
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+/* Let's get this party started */
+#images_container::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Track */
+#images_container::-webkit-scrollbar-track {
+}
+
+/* Handle */
+#images_container::-webkit-scrollbar-thumb {
+    background: rgb(175 175 175);
+}
+
+    #images_container::-webkit-scrollbar-thumb:window-inactive {
+        background: rgb(175 175 175);
+    }

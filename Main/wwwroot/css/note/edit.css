@@ -1,0 +1,47 @@
+﻿#box_load {
+    width: 95%;
+    border: 3px dashed black;
+    margin: 0% auto;
+    background-color: transparent;
+}
+
+.pdf_page {
+    display: grid;
+    grid-template-columns: 1fr 10fr;
+    align-items: center;
+    padding: 7px 0px 7px 7px;
+    cursor: pointer;
+    border-radius: 7px;
+}
+
+    .pdf_page:hover {
+        background-color: rgba(255, 0, 0, 0.6);
+    }
+
+{
+    fill: white
+}
+
+.pdf_page_selected {
+    background-color: rgba(255, 0, 0, 1);
+}
+
+    .pdf_page:hover > div > svg, .pdf_page:hover > div > span,
+    .pdf_page_selected > div > svg, .pdf_page_selected > div > span {
+        fill: white;
+        color: white;
+    }
+
+    .pdf_page_selected:hover {
+        background-color: !important rgba(255, 0, 0, 1);
+    }
+
+.pdf_page > div {
+    width: 80%;
+}
+
+    .pdf_page > div > span {
+        margin: auto 25%;
+        font-size: 20px;
+        font-weight: 700;
+    }

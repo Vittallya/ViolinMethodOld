@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Main.ViewModels
 {
-    public class NoteViewModel
+    public class NoteViewModel: ICloneable
     {
 
         [Display(Name = "Показывать номер страницы")]
@@ -32,5 +32,10 @@ namespace Main.ViewModels
         public string PageInfoJson { get; set; }
         public bool IsOtherFile { get; set; }
         public List<PageInfoDto> PageInfo { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

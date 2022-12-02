@@ -41,7 +41,7 @@ namespace DAL.Repositories
 
         public IEnumerable<T> GetAll()
         {
-            throw new NotImplementedException();
+            return Database.GetCollection<T>().FindAll();
         }
 
         public Task<IEnumerable<T>> GetAllAsync()
@@ -51,12 +51,17 @@ namespace DAL.Repositories
 
         public IEnumerable<T> GetAllClear()
         {
-            throw new NotImplementedException();
+            return Database.GetCollection<T>().FindAll();
         }
 
         public Task<IEnumerable<T>> GetAllClearAsync()
         {
             throw new NotImplementedException();
+        }
+
+        public int GetCount()
+        {
+            return Database.GetCollection<T>().Count();
         }
 
         public void Insert(T item)

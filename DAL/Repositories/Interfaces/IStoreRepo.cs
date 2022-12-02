@@ -18,6 +18,9 @@ namespace DAL.Repositories
         void Insert(IEnumerable<T> items);
         void Update(T item);
         void InsertOrUpdate(T item);
+
+        int GetCount();
+
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllClearAsync();
         Task<T> FindByIdAsync(object id);

@@ -1,0 +1,129 @@
+﻿@model NoteViewModel
+
+<link rel="stylesheet" href="/css/note/details.css" />
+<link rel="stylesheet" href="/css/note/edit.css" />
+
+<div class="div-header mb-4">
+
+    <div>
+        <button class="bg-transparent border-0" id="edit_bt_back">
+            <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 0 512 512">
+                <path d="M512 256C512 273.7 497.7 288 480 288H160.1l0 72c0 9.547-5.66 18.19-14.42 22c-8.754 3.812-18.95 2.077-25.94-4.407l-112.1-104c-10.24-9.5-10.24-25.69 0-35.19l112.1-104c6.992-6.484 17.18-8.218 25.94-4.406C154.4 133.8 160.1 142.5 160.1 151.1L160.1 224H480C497.7 224 512 238.3 512 256z" />
+            </svg>
+            <span style="margin-left:10px; font-size:18px">На главную</span>
+        </button>
+    </div>
+
+</div>
+
+<div class="col-8">
+
+    <form asp-action="Edit" id="form" enctype="multipart/form-data">
+
+        <div id="errors-div" asp-validation-summary="All" class="text-danger"></div>
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="PublishDate" />
+        <input type="hidden" id="note_info_json" asp-for="PageInfoJson" />
+        <input type="hidden" asp-for="ShowPageNumber" id="inp_page_number" />
+        <input type="hidden" asp-for="FileName" />
+
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+
+        <div id="file_change_box_radio" class="form-group">
+            <input id="radio_chgn_file" asp-for="IsOtherFile" />
+            <label for="radio_chgn_file">Сменить файл</label>
+        </div>
+
+        <div id="file_change_box" class="form-group d-none">
+            <label asp-for="File" class="control-label"></label>
+            <input asp-for="File" accept=".pdf" type="file" onchange="onFileUplodaded(this)" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+    </form>
+</div>
+
+<div class="row d-none" id="div_details">
+
+    <div class="itcss col-lg-5 col-xs-12" id="slider-1">
+        <div class="itcss__wrapper">
+            <div id="root_images_slider" class="itcss__items">
+
+            </div>
+        </div>
+        <a class="itcss__control itcss__control_prev" href="#" role="button" data-slide="prev"></a>
+        <a class="itcss__control itcss__control_next" href="#" role="button" data-slide="next"></a>
+
+    </div>
+
+    <div class="row col-lg-6 col-md-12 col-xs-12" id="slider_2">
+
+
+        <div id="root_images" class="div_details_images col-lg-4 col-sm-12  col-xs-12-pull">
+
+        </div>
+
+
+
+        <div id="div-main-img" class="div_details_image col-lg-8 col-sm-12 col-xs-12-push">
+            <canvas id="target-img" style="width: 100%;"></canvas>
+            @*<img id="main-img" class="d-block w-100" alt="/images/default_note.png">*@
+        </div>
+
+    </div>
+
+
+    <div class="div_details_descr col-lg-6 div_details_descr">
+        <div>
+            <div>
+
+
+                <div class="form-inline">
+                    <input type="button"
+                           id="bt_make_page_main"
+                           class="btn-success" value="Сделать главной"/>
+
+                    <input type="button"
+                           id="bt_make_page_main"
+                           class="btn-success" value="Очистить" />
+                </div>
+
+                <div id="priems_edit_root">
+
+                </div>
+
+            </div>
+
+
+            <div class="download-container div_details_section align-items-center">
+
+                <button id="btn_save" onclick="testSend()" class="btn btn-primary">Сохранить</button>
+                <button id="btn_cancel" onclick="testSend()" class="btn">Отмена</button>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+@{
+    var clone = Model.Clone() as NoteViewModel;
+    clone.File = null;
+
+    }
+
+
+    $("#radio_chgn_file").on('change', e => checkBoxToggle(e.currentTarget))
+    $("#edit_bt_back").on('click', () => clearAjaxView())
+    $("#bt_make_page_main").on('click', onSelectAsMainClicked)
+
+    initEdit(@Html.Raw(Json.Serialize(clone)))
+</script>

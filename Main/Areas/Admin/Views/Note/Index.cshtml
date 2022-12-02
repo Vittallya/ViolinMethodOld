@@ -45,7 +45,7 @@
                 </span>
 
                 <div class="font-weight-bold" style="margin-left: 5px">
-                    <span id="finded-text"></span>
+                    <span id="finded_text"></span>
                 </div>
             </div>
 
@@ -94,7 +94,7 @@
                         add
                     </a>*@
 
-                <button id="bt-add" class="btn btn-primary">
+                <button id="bt_add" class="btn btn-primary">
                     Добавить ноты
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="20" style="margin-left: 7px; fill:#fff">
                         <path d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z" />
@@ -107,34 +107,34 @@
         <div id="view_root">
 
         </div>
-        <p>
-            <nav id="pagination-nav" aria-label="Page navigation example">
-                <ul class="pagination" id="pagination-place">
-                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
-
-            <div class="d-flex justify-content-center page-links-div">
-
-            </div>
-        </p>
 
     </div>
 </div>
 
 @section Scripts{
 
+    <script src="//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js" asp-append-version="true"></script>
     <script type="text/javascript" src="~/js/notes/index.js"></script>
+    <script type="text/javascript" src="~/js/notes/details.js"></script>
+    <script type="text/javascript" src="~/js/notes/edit.js"></script>
+
     <script>
     $(() => {
         let total = Number( @Model.TotalCount)
         let takeCount = Number(@Model.TakeCount)
         let curPage = Number(@Model.CurrentPage)
         let viewName = "@Model.SelectedView"
+
+        $("#finded_text").text(total)
+        $("#bt_add").on('click', e => {
+            $.get({
+                url: "/admin/note/edit",
+                success: view => {
+                    placeAjaxView(view)
+                }
+            })
+        })
+
         initIndex(curPage, total, takeCount, viewName)
         loadView(null, data => {
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL;
 using BLL.Dto;
+using DAL.Models;
 using DAL.Repositories;
 using Main.ViewModels;
 using Main.ViewModels.Note;
@@ -37,6 +38,7 @@ namespace Main.Areas.Controllers
                 TakeCount = 15,
                 Views = new string[] { "TableView", "TileView" }
             };
+            model.TotalCount = store.Notes.GetCount();
 
             return View(model);
         }
@@ -84,6 +86,8 @@ namespace Main.Areas.Controllers
                     IsOtherFile = true,
                 };
             }
+
+            viewModel.AllPriems = store.Priems.GetAll().Select(x => mapper.Map<Priem, PriemDto>(x));
 
             if (IsAjax(Request))
                 return PartialView(viewModel);

@@ -11,7 +11,7 @@ namespace DAL.Repositories
         public LiteDbStore(ILiteDatabase database, string priemName = null, string priemGroupName = null, string notesName = null)
         {
             Database = database;
-            Priems = new LiteDbRepo<Priem>(this, database, priemName);
+            Priems = new PriemsRepo(this, database, priemName);
             PriemGroups = new LiteDbRepo<PriemGroup>(this, database, priemGroupName);
             Notes = new LiteDbRepo<Note>(this, database, notesName);
         }

@@ -54,3 +54,11 @@ function loadView(data = null, onSuccessFunc = null) {
         }
     })
 }
+
+function placeAjaxView(content) {
+    $("#main_item").after($('<div id = "root_edit"></div>').append(content)).hide()
+}
+
+function clearAjaxView() {
+    $("#main_item").show().next().remove()
+}
