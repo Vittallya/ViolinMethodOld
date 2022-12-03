@@ -175,6 +175,9 @@ namespace Main.Areas.Controllers
         public ActionResult Edit(NoteViewModel item)
         {
             var info = JsonConvert.DeserializeObject<PageInfoDto[]>(item.PageInfoJson);
+            item.PageInfo = info.ToList();
+
+            var dto = mapper.Map<NoteViewModel, NoteDto>(item);
 
             try
             {

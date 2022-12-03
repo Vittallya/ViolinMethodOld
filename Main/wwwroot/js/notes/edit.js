@@ -197,7 +197,7 @@ function updateSelectListData(priems = null) {
 
     if (priems != null) {
         priems.forEach(priem => {
-            var option = $(`#option_priem_${priem}`)[0]
+            var option = $(`#option_priem_${priem.id}`)[0]
             option.selected = true
         })
     }
@@ -211,12 +211,12 @@ function onSelectListChanged(e) {
 
     root.find("option").each((i, e) => {
         if (e.selected)
-            priems.push(Number(e.value))
+            priems.push({ id: Number(e.value) })
     })
     if (data[currPage] == undefined)
         data[currPage] = {
             priems: null,
-            diffLvl: null,
+            diffLvl: 0,
             recs: null
         }
 
@@ -227,10 +227,13 @@ function onSelectListChanged(e) {
 function onSaveClicked(e) {
 
     let pageInfo = Object.keys(data).reduce((arr, key) => {
+        data[key].pageNumber = Number(key)
         arr.push(data[key])
+        return arr
     }, [])
 
     $("#page_info_json").val(JSON.stringify(pageInfo))
+    $("#inp_page_number").val(item.showPageNumber)
     var form = $("#form")[0]
     var formData = new FormData(form)
 

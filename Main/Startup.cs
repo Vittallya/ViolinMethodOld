@@ -31,8 +31,11 @@ namespace Main
         {
             services.AddTransient(x => new Mapper(new MapperConfiguration(x =>
             {
-                x.CreateMap<Note, NoteViewModel>();
-                x.CreateMap<NoteViewModel, Note>();
+                x.CreateMap<NoteDto, NoteViewModel>();
+                x.CreateMap<NoteViewModel, NoteDto>();
+
+                x.CreateMap<Note, NoteDto>();
+                x.CreateMap<NoteDto, Note>();
 
                 x.CreateMap<PageInfo, PageInfoDto>();
                 x.CreateMap<PageInfoDto, PageInfo>();
