@@ -24,9 +24,11 @@
 
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="PublishDate" />
-        <input type="hidden" id="note_info_json" asp-for="PageInfoJson" />
+        <input type="hidden" id="page_info_json" asp-for="PageInfoJson" />
         <input type="hidden" asp-for="ShowPageNumber" id="inp_page_number" />
         <input type="hidden" asp-for="FileName" />
+        <input type="hidden" asp-for="IsNew" />
+        <input type="hidden" asp-for="Info" id="info" />
 
         <div class="form-group">
             <label asp-for="Name" class="control-label"></label>
@@ -103,8 +105,7 @@
 
             <div class="download-container div_details_section align-items-center">
 
-                <button id="btn_save" onclick="testSend()" class="btn btn-primary">Сохранить</button>
-                <button id="btn_cancel" onclick="testSend()" class="btn">Отмена</button>
+                <button id="bt_save" class="btn btn-primary">Сохранить</button>
 
             </div>
         </div>
@@ -124,6 +125,7 @@
     $("#radio_chgn_file").on('change', e => checkBoxToggle(e.currentTarget))
     $("#edit_bt_back").on('click', () => clearAjaxView())
     $("#bt_make_page_main").on('click', onSelectAsMainClicked)
+    $("#bt_save").on('click', onSaveClicked)
 
     initEdit(@Html.Raw(Json.Serialize(clone)))
 </script>

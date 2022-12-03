@@ -7,10 +7,12 @@ using Main.ViewModels;
 using Main.ViewModels.Note;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Main.Areas.Controllers
 {
@@ -87,7 +89,43 @@ namespace Main.Areas.Controllers
                 };
             }
 
-            viewModel.AllPriems = store.Priems.GetAll().Select(x => mapper.Map<Priem, PriemDto>(x));
+            viewModel.AllPriems = new PriemDto[]
+            {
+                new PriemDto
+                {
+                    Id = 1,
+                    Name = "Прием1",
+                    Group = new PriemGroupDto()
+                    {
+                        Id = 1,
+                        Name = "Группа1"
+                    }
+                },
+
+                new PriemDto
+                {
+                    Id = 2,
+                    Name = "Прием2",
+                    Group = new PriemGroupDto()
+                    {
+                        Id = 1,
+                        Name = "Группа1"
+                    }
+                },
+
+                new PriemDto
+                {
+                    Id = 3,
+                    Name = "Прием3",
+                    Group = new PriemGroupDto()
+                    {
+                        Id = 2,
+                        Name = "Группа2"
+                    }
+                },
+            };
+
+            //viewModel.AllPriems = store.Priems.GetAll().Select(x => mapper.Map<Priem, PriemDto>(x));
 
             if (IsAjax(Request))
                 return PartialView(viewModel);
@@ -98,8 +136,10 @@ namespace Main.Areas.Controllers
         // POST: NoteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(NoteViewModel item)
         {
+            var info = JsonConvert.DeserializeObject<PageInfoDto[]>(item.PageInfoJson);
+
             try
             {
                 return RedirectToAction(nameof(Index));
@@ -112,6 +152,12 @@ namespace Main.Areas.Controllers
 
         // GET: NoteController/Delete/5
         public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Test(PageInfoDto dto)
         {
             return View();
         }

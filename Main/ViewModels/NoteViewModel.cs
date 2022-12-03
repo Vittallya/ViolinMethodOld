@@ -33,6 +33,8 @@ namespace Main.ViewModels
         public bool IsOtherFile { get; set; }
         public List<PageInfoDto> PageInfo { get; set; }
 
+        public PageInfoDto Info { get; set; }
+
         public object Clone()
         {
             return MemberwiseClone();

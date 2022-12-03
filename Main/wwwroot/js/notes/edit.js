@@ -5,7 +5,7 @@ let currPage = null
 
 function initEdit(item1) {
     item = item1
-
+    fillInputFields(item.allPriems)
     if (item.isNew) {
         $("#file_change_box_radio").addClass('d-none')
         $("#file_change_box").removeClass('d-none')
@@ -15,6 +15,7 @@ function initEdit(item1) {
             selectPageAsMain(item.showPageNumber)
             doc.getPage(item.showPageNumber).
                 then(page => onPageClicked($("#pdf_page_" + item.showPageNumber), item.showPageNumber, page))
+            //
         })
     }
 }
@@ -119,6 +120,66 @@ function editPageIterator(page, pdf, pageNum, root, pageOnClick, isPointVis = fa
 
     div.append(secondDiv).append(canvas)
     root.append(div)
+}
+
+function fillInputFields(allPriems) {
+    let groups = []
+
+    var rootInputs = $("#priems_edit_root").empty();
+
+    allPriems.forEach(p => {
+
+        var select = null;
+        if (groups.indexOf(p.group.id) === -1) {
+            let div = $(`<div class = "form-group"></div>`).
+                append($(`<label class="form-label">${p.group.name}</label>`)).
+                append((select = $(`<select id="select_group_${p.group.id}" multiple class = "form-control"></select>`)))
+            rootInputs.append(div)
+            groups.push(p.group.id)
+        }
+        else {
+            select = rootInputs.find(`#select_group_${p.group.id}`)
+        }
+
+        select.append($(`<option class="option_priem" id = "option_priem_${p.id}" value=${p.id} >${p.name}</option>`))
+    })
+}
+
+function updateSelectListData(selectedPriems) {
+    var root = $("#priems_edit_root")
+    root.find(".option_priem").each((i, e) => {
+        e.selected = false
+    })
+
+    selectedPriems.forEach(p => {
+        var option = $(`#option_priem_${p.id}`)[0]
+        option.selected = true
+    })
+}
+
+function onSaveClicked(e) {
+    
+    $("#page_info_json").val(JSON.stringify(pageInfo))
+    var form = $("#form")[0]
+    var formData = new FormData(form)
+
+    $.ajax({
+        type: "POST",
+        url: '/admin/note/edit',
+        data: formData,
+        dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (msg) {
+            if (msg.error == '') {
+                $("#js-file").hide();
+                $('#result').html(msg.success);
+            } else {
+                $('#result').html(msg.error);
+            }
+        }
+    });
 }
 
 function getEyeIcon() {
