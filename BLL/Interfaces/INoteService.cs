@@ -11,7 +11,6 @@ namespace BLL
     {
         public NoteDto GetById(Guid id);
         public IEnumerable<NoteDto> GetNotes(int take, int skip, IEnumerable<Guid> noteIds = null, IEnumerable<int> priems = null);
-        public Task InsertOrUpdateAsync(NoteDto model, Guid? guid = null);
-        public void UploadImage(Stream imgStream, Stream fileStream, int pageNumber, ImageFormat imageFormat);
+        public void InsertOrUpdate(NoteDto model, Guid? guid = null);
     }
 }

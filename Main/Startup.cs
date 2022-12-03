@@ -29,6 +29,8 @@ namespace Main
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<PdfService>();
+
             services.AddTransient(x => new Mapper(new MapperConfiguration(x =>
             {
                 x.CreateMap<NoteDto, NoteViewModel>();
@@ -47,6 +49,7 @@ namespace Main
                 x.CreateMap<PriemGroupDto, PriemGroup>();
 
             })));
+
 
             services.AddDbContext<DbMainContext>(x =>
             {

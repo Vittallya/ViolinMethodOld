@@ -21,7 +21,7 @@ namespace DAL.Repositories
 
         public void Delete(object id)
         {
-            throw new NotImplementedException();
+            base.Delete<T>(new BsonValue(id));
         }
 
         public Task DeleteAsync(object id)
@@ -31,7 +31,7 @@ namespace DAL.Repositories
 
         public T FindById(object id)
         {
-            throw new NotImplementedException();
+            return Database.GetCollection<T>().FindById(new BsonValue(id));
         }
 
         public Task<T> FindByIdAsync(object id)
@@ -66,12 +66,12 @@ namespace DAL.Repositories
 
         public void Insert(T item)
         {
-            throw new NotImplementedException();
+            base.Insert(item);
         }
 
         public void Insert(IEnumerable<T> items)
         {
-            throw new NotImplementedException();
+            base.Insert(items);
         }
 
         public Task InsertAsync(T item)
@@ -86,7 +86,7 @@ namespace DAL.Repositories
 
         public void InsertOrUpdate(T item)
         {
-            throw new NotImplementedException();
+            Upsert<T>(item);
         }
 
         public Task InsertOrUpdateAsync(T item)
@@ -96,7 +96,7 @@ namespace DAL.Repositories
 
         public void Update(T item)
         {
-            throw new NotImplementedException();
+            base.Update<T>(item);
         }
 
         public Task UpdateAsync(T item)

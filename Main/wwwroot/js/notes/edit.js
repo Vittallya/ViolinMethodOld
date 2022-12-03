@@ -241,17 +241,11 @@ function onSaveClicked(e) {
         type: "POST",
         url: '/admin/note/edit',
         data: formData,
-        dataType: 'json',
-        cache: false,
         contentType: false,
         processData: false,
-        success: function (msg) {
-            if (msg.error == '') {
-                $("#js-file").hide();
-                $('#result').html(msg.success);
-            } else {
-                $('#result').html(msg.error);
-            }
+        success: () => {
+            clearAjaxView()
+            loadView()
         }
     });
 }

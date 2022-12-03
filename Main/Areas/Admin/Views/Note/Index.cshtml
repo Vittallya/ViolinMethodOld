@@ -136,14 +136,7 @@
         })
 
         initIndex(curPage, total, takeCount, viewName)
-        loadView(null, data => {
-
-            if (viewName == "TableView") {
-                //document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
-                $(".table_sort thead").each((i, e) => e.addEventListener('click', () => getSort(event)))
-            }
-
-        })
+        loadView()
     })
     </script>
 }

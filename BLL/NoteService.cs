@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using PdfiumViewer;
 
 namespace BLL
 {
@@ -15,11 +15,13 @@ namespace BLL
     {
         private readonly IStore store;
         private readonly Mapper mapper;
+        private readonly PdfService pdfService;
 
-        public NoteService(IStore store, Mapper mapper)
+        public NoteService(IStore store, Mapper mapper, PdfService pdfService)
         {
             this.store = store;
             this.mapper = mapper;
+            this.pdfService = pdfService;
         }
 
         public NoteDto GetById(Guid id)
@@ -39,13 +41,22 @@ namespace BLL
             throw new ArgumentException("choosen store that isn`t lite database");
         }
 
-        public Task InsertOrUpdateAsync(NoteDto model, Guid? guid = null)
+        public void InsertOrUpdate(NoteDto model, Guid? guid = null)
         {
-            throw new NotImplementedException();
+            model.Id = guid ?? Guid.NewGuid();
+
+            if (guid.HasValue)
+            {
+                model.LastUpdate = DateTime.UtcNow;
+            }
+            else
+            {
+                model.PublishDate = DateTime.UtcNow;
+            }
+
+            var note = mapper.Map<NoteDto, Note>(model);
+            store.Notes.InsertOrUpdate(note);
         }
-        public void UploadImage(Stream imgStream, Stream fileStream, int pageNumber, ImageFormat imageFormat)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

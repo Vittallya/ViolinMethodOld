@@ -5,14 +5,17 @@ using DAL.Models;
 using DAL.Repositories;
 using Main.ViewModels;
 using Main.ViewModels.Note;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Main.Areas.Controllers
 {
@@ -22,12 +25,16 @@ namespace Main.Areas.Controllers
         private readonly INoteService noteService;
         private readonly IStore store;
         private readonly Mapper mapper;
+        private readonly IWebHostEnvironment env;
+        private readonly PdfService pdfService;
 
-        public NoteController(INoteService noteService, IStore store, Mapper mapper)
+        public NoteController(INoteService noteService, IStore store, Mapper mapper, IWebHostEnvironment env, PdfService pdfService)
         {
             this.noteService = noteService;
             this.store = store;
             this.mapper = mapper;
+            this.env = env;
+            this.pdfService = pdfService;
         }
 
         [Route("/admin/note")]
@@ -172,27 +179,98 @@ namespace Main.Areas.Controllers
         // POST: NoteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(NoteViewModel item)
+        public  ActionResult Edit(NoteViewModel item)
         {
-            var info = JsonConvert.DeserializeObject<PageInfoDto[]>(item.PageInfoJson);
-            item.PageInfo = info.ToList();
+            bool isAjax = IsAjax(Request);
 
-            var dto = mapper.Map<NoteViewModel, NoteDto>(item);
-
-            try
+            if (!item.IsNew && !item.IsOtherFile && item.File == null)
             {
-                return RedirectToAction(nameof(Index));
+                ModelState.Remove("File");
             }
-            catch
+
+
+            if (item.File != null && Path.GetExtension(item.File.FileName) != ".pdf")
             {
-                return View();
+                ModelState.AddModelError("", "Файл должен быть в формате .pdf");
+            }
+
+
+            else if (ModelState.IsValid)
+            {
+                var info = JsonConvert.DeserializeObject<PageInfoDto[]>(item.PageInfoJson);
+                item.PageInfo = info.ToList();
+                var dto = mapper.Map<NoteViewModel, NoteDto>(item);
+
+                if (item.File != null)
+                {
+                    dto.FileName = item.File.FileName;
+                }
+
+                noteService.InsertOrUpdate(dto, item.Id);
+
+                if(item.File != null)
+                {
+                    string folderName = dto.Id.ToString();
+
+                    string path = Path.Combine(env.WebRootPath, "notefiles\\", folderName + "\\", dto.FileName);
+
+                    string folderPath = Path.Combine(env.WebRootPath, "notefiles\\" + folderName + "\\");
+                    string imgPath = Path.Combine(folderPath, "images\\");
+                    string imgFullName = Path.Combine(imgPath, dto.ShowPageNumber + ".jpg");
+
+                    if (!Directory.Exists(imgPath))
+                    {
+                        Directory.CreateDirectory(imgPath);
+                    }
+
+                    using var str = System.IO.File.Create(path);
+                    item.File.CopyTo(str);
+                    using var imgStr = System.IO.File.Create(imgFullName);
+                    pdfService.UnwrapImage(str, dto.ShowPageNumber, imgStr);
+                }
+                else if (!item.IsNew && store.Notes.FindById(dto.Id).ShowPageNumber != dto.ShowPageNumber)
+                {
+                    string path = Path.Combine(env.WebRootPath, "notefiles\\", dto.Id + "\\", dto.FileName);
+                    string imgPath = Path.Combine(env.WebRootPath, "notefiles\\", dto.Id + "\\", "images\\" + dto.ShowPageNumber + ".jpg");
+
+                    using FileStream str = System.IO.File.OpenRead(path);
+                    using FileStream imgStr = System.IO.File.OpenWrite(imgPath);
+                    pdfService.UnwrapImage(str, dto.ShowPageNumber, imgStr,  System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
+
+
+                if (isAjax)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            if (isAjax)
+            {
+                return ValidationProblem(ModelState);
+            }
+            else
+            {
+                return View(item);
             }
         }
 
-        // GET: NoteController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
-            return View();
+            try
+            {
+                store.Notes.Delete(id);
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
 
         [HttpPost]
