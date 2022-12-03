@@ -125,6 +125,42 @@ namespace Main.Areas.Controllers
                 },
             };
 
+            viewModel.PageInfo = new List<PageInfoDto>
+            {
+                new PageInfoDto
+                {
+                    PageNumber = 1,
+                    Priems = new List<PriemDto>
+                    {
+                        new PriemDto
+                        {
+                            Id = 1,
+                            Name = "Прием1",
+                            Group = new PriemGroupDto()
+                            {
+                                Id = 1,
+                            }
+                        },
+                    }
+                },
+                new PageInfoDto
+                {
+                    PageNumber = 2,
+                    Priems = new List<PriemDto>
+                    {
+                        new PriemDto
+                        {
+                            Id = 3,
+                            Name = "Прием1",
+                            Group = new PriemGroupDto()
+                            {
+                                Id = 2,
+                            }
+                        },
+                    }
+                },
+            };
+
             //viewModel.AllPriems = store.Priems.GetAll().Select(x => mapper.Map<Priem, PriemDto>(x));
 
             if (IsAjax(Request))

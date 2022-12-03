@@ -2,10 +2,18 @@
 let lastSelected = null
 let lastEyeIcon = null
 let currPage = null
+let data = {
+
+}
 
 function initEdit(item1) {
     item = item1
     fillInputFields(item.allPriems)
+
+
+    data = {}
+
+
     if (item.isNew) {
         $("#file_change_box_radio").addClass('d-none')
         $("#file_change_box").removeClass('d-none')
@@ -17,7 +25,13 @@ function initEdit(item1) {
                 then(page => onPageClicked($("#pdf_page_" + item.showPageNumber), item.showPageNumber, page))
             //
         })
+
+        item.pageInfo.forEach(page => {
+            data[page.pageNumber] = page
+        })
     }
+
+    //updateSelectListData(item.pageInfo.reduce((arr, curr) => arr.concat(curr.priems), []))
 }
 
 function onSelectAsMainClicked(e) {
@@ -68,7 +82,35 @@ function onPageClicked(div, pageNum, page) {
     lastSelected = div
     div.addClass('pdf_page_selected')
     renderPageToCanvas(page, $("#target-img")[0])
-    //onPageChanged(pageNum)
+    onPageChanged(pageNum)
+}
+
+function onPageChanged(pageNum) {
+
+    if (Object.keys(data).length > 0) {
+        if (data[pageNum] != undefined) {
+            updateSelectListData(data[pageNum].priems)
+        }
+        else {
+            let page = 1;
+
+            Object.keys(data).forEach(val => {
+                if (val > page && val < pageNum)
+                    page = val;
+            })
+
+            if (page < pageNum)
+                updateSelectListData(data[page].priems)
+            else
+                updateSelectListData()
+        }
+    }
+    //if (state.showPageNumber === pageNum) {
+    //    $("#bt_make_page_main").addClass('d-none')
+    //}
+    //else {
+    //    $("#bt_make_page_main").removeClass('d-none')
+    //}
 }
 
 function checkBoxToggle(checkBox) {
@@ -136,6 +178,7 @@ function fillInputFields(allPriems) {
                 append((select = $(`<select id="select_group_${p.group.id}" multiple class = "form-control"></select>`)))
             rootInputs.append(div)
             groups.push(p.group.id)
+            select.on('change', onSelectListChanged)
         }
         else {
             select = rootInputs.find(`#select_group_${p.group.id}`)
@@ -145,20 +188,48 @@ function fillInputFields(allPriems) {
     })
 }
 
-function updateSelectListData(selectedPriems) {
+function updateSelectListData(priems = null) {
+
     var root = $("#priems_edit_root")
     root.find(".option_priem").each((i, e) => {
         e.selected = false
     })
 
-    selectedPriems.forEach(p => {
-        var option = $(`#option_priem_${p.id}`)[0]
-        option.selected = true
+    if (priems != null) {
+        priems.forEach(priem => {
+            var option = $(`#option_priem_${priem}`)[0]
+            option.selected = true
+        })
+    }
+}
+
+function onSelectListChanged(e) {
+
+    var root = $("#priems_edit_root")
+
+    var priems = []
+
+    root.find("option").each((i, e) => {
+        if (e.selected)
+            priems.push(Number(e.value))
     })
+    if (data[currPage] == undefined)
+        data[currPage] = {
+            priems: null,
+            diffLvl: null,
+            recs: null
+        }
+
+    data[currPage].priems = priems
+ 
 }
 
 function onSaveClicked(e) {
-    
+
+    let pageInfo = Object.keys(data).reduce((arr, key) => {
+        arr.push(data[key])
+    }, [])
+
     $("#page_info_json").val(JSON.stringify(pageInfo))
     var form = $("#form")[0]
     var formData = new FormData(form)
