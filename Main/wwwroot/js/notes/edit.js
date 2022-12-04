@@ -71,8 +71,6 @@ function selectPageAsMain(pageNum) {
     $("#pdf_page_" + pageNum).children('div').append(lastEyeIcon)
 }
 
-
-
 function onPageClicked(div, pageNum, page) {
 
     if (lastSelected != null)
@@ -133,7 +131,6 @@ function renderPageToCanvas(page, taregtCanvas) {
         viewport: viewport
     });
 }
-
 
 function editPageIterator(page, pdf, pageNum, root, pageOnClick, isPointVis = false, isMain = false) {
     var pageNum = page.pageIndex + 1;
@@ -249,6 +246,9 @@ function onSaveClicked(e) {
         }
     });
 }
+
+//todo проверка при отправке (гл. страница, наличие выбранных нот хотя бы для одной страницы)
+//todo при редактировании страницы - появляется точка
 
 function getEyeIcon() {
     return $(`

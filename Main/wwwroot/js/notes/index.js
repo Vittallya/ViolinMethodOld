@@ -86,8 +86,8 @@ function onEdit(e) {
     let id = $(e.currentTarget).attr('data-id')
     let url = window.location.origin + "/admin/note/edit/" + id;
 
-    $.get(url).done(page => {
-        switchToAdditional()
+    $.get(url).done(view => {
+        placeAjaxView(view)
         //$('#ajax-content-place').empty().append(page)
         //$("#modal_loading").modal('hide')
     }).fail(err => {
