@@ -2,7 +2,7 @@
 let lastDiv = null;
 
 function initPriem() {
-    loadData('/admin/priem/getGropus', onGroupsLoaded, onError)
+    loadData('/admin/priem/getGroups', onGroupsLoaded, onError)
 }
 
 function onGroupsLoaded(groups) {
