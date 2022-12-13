@@ -1,7 +1,7 @@
 ﻿@model PriemViewModel
 
 
-<form asp-action="EditPriem">
+<form asp-action="EditPriem" method="post">
 
     <input type="hidden" asp-for="Id" />
     <div id="errors-div" asp-validation-summary="All" class="text-danger"></div>
@@ -20,7 +20,7 @@
 
     <div class="form-group">
         <label asp-for="GroupId" class="control-label"></label>
-        @Html.ListBoxFor(x => x.GroupId, Model.Groups.Select(x => new SelectListItem(x.Name, x.Id.ToString())), htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownListFor(x => x.GroupId, new SelectList( Model.Groups, "Id", "Name"), htmlAttributes: new { @class = "form-control" })
         <span asp-validation-for="GroupId" class="text-danger"></span>
     </div>
 

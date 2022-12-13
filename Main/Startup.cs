@@ -47,6 +47,12 @@ namespace Main
 
                 x.CreateMap<PriemGroup, PriemGroupDto>();
                 x.CreateMap<PriemGroupDto, PriemGroup>();
+                
+                x.CreateMap<Priem, PriemViewModel>();
+                x.CreateMap<PriemViewModel, Priem>();
+
+                x.CreateMap<PriemGroup, PriemGroupViewModel>();
+                x.CreateMap<PriemGroupViewModel, PriemGroup>();
 
             })));
 

@@ -170,7 +170,7 @@ function fillInputFields(allPriems) {
 
         var select = null;
         if (groups.indexOf(p.group.id) === -1) {
-            let div = $(`<div class = "form-group"></div>`).
+            let div = $(`<div contextmenu="menu" class = "form-group"></div>`).
                 append($(`<label class="form-label">${p.group.name}</label>`)).
                 append((select = $(`<select id="select_group_${p.group.id}" multiple class = "form-control"></select>`)))
             rootInputs.append(div)
@@ -181,7 +181,7 @@ function fillInputFields(allPriems) {
             select = rootInputs.find(`#select_group_${p.group.id}`)
         }
 
-        select.append($(`<option class="option_priem" id = "option_priem_${p.id}" value=${p.id} >${p.name}</option>`))
+        select.append($(`<option contextmenu="menu" class="option_priem" id = "option_priem_${p.id}" value=${p.id} >${p.name}</option>`))
     })
 }
 
@@ -222,6 +222,16 @@ function onSelectListChanged(e) {
 }
 
 function onSaveClicked(e) {
+
+    if (item.showPageNumber == 0) {
+        alert("Укажите главную страницу")
+        return
+    }
+
+    if (Object.keys(data) == 0 || Object.keys(data).every(p => data[p].priems.length == 0)) {
+        alert("Хотя бы для одной страницы должен быть указан хотя бы один прием")
+        return
+    }
 
     let pageInfo = Object.keys(data).reduce((arr, key) => {
         data[key].pageNumber = Number(key)

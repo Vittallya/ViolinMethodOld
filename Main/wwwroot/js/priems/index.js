@@ -2,7 +2,22 @@
 let lastDiv = null;
 
 function initPriem() {
-    loadData('/admin/priem/getGroups', onGroupsLoaded, onError)
+    //loadData('/admin/priem/getGroups', onGroupsLoaded, onError)
+    loadData('/admin/priem/editPriem', form => {
+        $("#test").append(form)
+        $("form").on('submit', f => {
+            f.stopPropagation()
+            f.preventDefault()
+            formData = new FormData(f.currentTarget)
+            $.ajax({
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                url: f.currentTarget.action,
+                data: formData,                
+            })
+        })
+    }, onError)
 }
 
 function onGroupsLoaded(groups) {

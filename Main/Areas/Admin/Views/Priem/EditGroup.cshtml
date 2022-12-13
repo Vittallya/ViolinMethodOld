@@ -1,7 +1,7 @@
 ﻿@model PriemGroupViewModel
 
 
-<form asp-action="EditGroup">
+<form asp-action="EditGroup" method="post">
 
     <input type="hidden" asp-for="Id" />
     <div id="errors-div" asp-validation-summary="All" class="text-danger"></div>

@@ -3,6 +3,7 @@ using BLL.Dto;
 using DAL.Models;
 using DAL.Repositories;
 using Main.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,9 @@ namespace Main.Areas.Admin.Controllers
                 group = map.Map<PriemGroup, PriemGroupViewModel>(store.PriemGroups.FindById(id.Value));
             }
 
+            if (IsAjax(Request))
+                return PartialView(group);
+
             return View(group);
         }
         
@@ -52,10 +56,14 @@ namespace Main.Areas.Admin.Controllers
                 var item = map.Map<PriemGroupViewModel, PriemGroup>(model);
 
                 store.PriemGroups.InsertOrUpdate(item);
-                return Ok();
-            }
 
-            return ValidationProblem(ModelState);
+                if (IsAjax(Request))
+                    return Ok();
+                return RedirectToAction("Index");
+            }
+            if (IsAjax(Request))
+                return ValidationProblem(ModelState);
+            return View(model);
         }
 
         public ActionResult EditPriem(int? id = null)
@@ -70,7 +78,10 @@ namespace Main.Areas.Admin.Controllers
             }
 
             priem.Groups = store.PriemGroups.GetAllClear().
-                Select(x => map.Map<PriemGroup, PriemGroupViewModel>(x));
+                Select(x => map.Map<PriemGroup, PriemGroupViewModel>(x)).ToList();
+
+            if (IsAjax(Request))
+                return PartialView(priem);
 
             return View(priem);
         }
@@ -78,17 +89,24 @@ namespace Main.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPriem(PriemGroupViewModel model)
+        public ActionResult EditPriem(PriemViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var item = map.Map<PriemGroupViewModel, PriemGroup>(model);
-
-                store.PriemGroups.InsertOrUpdate(item);
-                return Ok();
+                var item = map.Map<PriemViewModel, Priem>(model);
+                item.Group = new PriemGroup { Id = model.GroupId };
+                store.Priems.InsertOrUpdate(item);
+                if (IsAjax(Request))
+                    return Ok(item.Id);
+                return RedirectToAction("Index");
             }
+            
+            if (IsAjax(Request))
+                return ValidationProblem(ModelState);
 
-            return ValidationProblem(ModelState);
+            model.Groups = store.PriemGroups.GetAllClear().
+                Select(x => map.Map<PriemGroup, PriemGroupViewModel>(x)).ToList();
+            return View(model);
         }
 
         public JsonResult GetPriems()
@@ -96,9 +114,44 @@ namespace Main.Areas.Admin.Controllers
             return Json(store.Priems.GetAllClear());
         }
 
+        public JsonResult GetPriemsAll()
+        {
+            return Json(store.Priems.GetAll());
+        }
+
         public JsonResult GetGroups()
         {
             return Json(store.PriemGroups.GetAllClear());
         }
+
+        [Route("admin/priem/deletePriem/{id}")]
+        public ActionResult DeletePriem(int id)
+        {
+            try
+            {
+                store.Priems.Delete(id);
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return ValidationProblem(e.Message);
+            }
+        }
+
+        [Route("admin/priem/deletegroup/{id}")]
+        public ActionResult DeleteGroup(int id)
+        {
+            try
+            {
+                store.PriemGroups.Delete(id);
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return ValidationProblem(e.Message);
+            }
+        }
+
+        bool IsAjax(HttpRequest req) => req.Headers["X-Requested-With"] == "XMLHttpRequest";
     }
 }
