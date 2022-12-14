@@ -59,7 +59,7 @@ namespace Main.Controllers
 
                     if (res.Succeeded)
                     {
-                        return Redirect(returnUrl ?? "/Admin/notes");
+                        return Redirect(returnUrl ?? "/Admin/note");
                     }
                 }
                 ModelState.AddModelError("", "Неверные входные данные");
