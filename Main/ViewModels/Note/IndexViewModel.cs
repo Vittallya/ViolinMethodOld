@@ -8,7 +8,6 @@ namespace Main.ViewModels.Note
 {
     public class IndexViewModel
     {
-        public int TotalCount { get; set; }
         public int TakeCount { get; set; }
         public int CurrentPage { get; set; }
 
@@ -17,5 +16,10 @@ namespace Main.ViewModels.Note
         public IEnumerable<string> Views { get; set; }
 
         public FilterViewModel Filter { get; set; }
+
+        //------------------------------------------- меняется сервером:
+        public int TotalCount { get; set; }
+
+        public IEnumerable<NoteViewModel> Notes { get; set; }
     }
 }

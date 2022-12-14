@@ -13,5 +13,7 @@ namespace Main.ViewModels
         [Required]
         [Display( Name ="Название группы")]
         public string Name { get; set; }
+
+        public IEnumerable<PriemViewModel> Priems { get; set; }
     }
 }

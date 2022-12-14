@@ -1,4 +1,4 @@
-﻿@model IEnumerable<NoteViewModel>
+﻿@model IndexViewModel
 
 <table id="notesTable" class="table table_sort">
     <thead>
@@ -23,7 +23,7 @@
             int i = 1;
         }
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.Notes)
         {
             <tr>
                 <td>
@@ -63,3 +63,8 @@
         }
     </tbody>
 </table>
+
+<script>
+    model.totalCount = Number(@Model.TotalCount)
+    $("#finded_text").text(model.totalCount)
+</script>

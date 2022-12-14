@@ -3,8 +3,11 @@
     takeCount: 0,
     currentPage: 1,
     selectedView: null,
-    filters: null
+    filters: null,
+    paginationDefined: false
 }
+
+let filtersLoaded = false
 
 function initIndex(curPage, totalItemsCount, take, viewName) {
     jQuery.ajaxSettings.traditional = true;
@@ -14,8 +17,44 @@ function initIndex(curPage, totalItemsCount, take, viewName) {
     model.totalCount = totalItemsCount
 }
 
-function definePagination(curPage, totalPages) {
+function definePagination(curPage, totalPages, root) {
 
+    root.empty()
+
+    if (totalPages == 1)
+        return;
+
+    root.append($('<li class="page-item active"></li>').append(`<span class = "page-link">${curPage}</span>`))
+    var i = curPage - 1
+
+    for (; i >= curPage - 1 && i > 0; i--) {
+        root.prepend(getLi(i))
+    }
+
+    if (i > 1) {
+        root.prepend($('<li class="page-item"></li>').append(`<span>...</span>`))
+        root.prepend(getLi(1))
+    }
+
+    var i = curPage + 1
+
+    for (; i <= curPage + 1 && i <= totalPages; i++) {
+        root.append(getLi(i))
+    }
+
+
+    if (i < totalPages) {
+        root.append($('<li class="page-item"></li>').append(`<span>...</span>`))
+        root.append(getLi(totalPages))
+    }
+    model.paginationDefined = true
+    function getLi(pageNumber) {
+        return $('<li class="page-item" ></li>').append($(`<a class="page-link" href="#">${pageNumber}</a>`)).on('click', e => {
+            e.stopPropagation()
+            model.currentPage = pageNumber
+            loadView()
+        })
+    }
 }
 
 function appendView(view) {
@@ -39,12 +78,15 @@ const getSort = ({ target }) => {
         cell.classList.toggle('sorted', cell === target);
 };
 
-function loadView(data = null, onSuccessFunc = null) {
+function loadView(data = null, onSuccessFunc = null, url = null) {
+    if (url == null)
+        url = "/admin/note/getNotes"
+
     if (data == null)
         data = model
 
     $.get({
-        url: "/admin/note/getNotes",
+        url: url,
         data: data,
         success: view => {
             var root = appendView(view)
@@ -56,11 +98,25 @@ function loadView(data = null, onSuccessFunc = null) {
             root.find(".bt_delete_note").on('click', onDelete)
             root.find(".bt_edit_note").on('click', onEdit)
 
+            definePagination(model.currentPage, Math.ceil(model.totalCount / model.takeCount), $("#p_root"))
+
             if (onSuccessFunc != null)
                 onSuccessFunc(view)
 
         }
     })
+}
+
+function loadFilters(root) {
+    if (!filtersLoaded) {
+        $.get({
+            url: "/admin/note/getfilterview",
+            success: view => {
+                $(root).empty().append(view)
+            }
+        })
+        filtersLoaded = true
+    }
 }
 
 function onDelete(e) {
@@ -99,6 +155,9 @@ function onEdit(e) {
 }
 
 function placeAjaxView(content) {
+
+    $("#root_edit").remove()
+
     $("#main_item").after($('<div id = "root_edit"></div>').append(content)).hide()
 }
 

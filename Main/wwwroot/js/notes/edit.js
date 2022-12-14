@@ -69,6 +69,17 @@ function selectPageAsMain(pageNum) {
 
     lastEyeIcon = getEyeIcon()
     $("#pdf_page_" + pageNum).children('div').append(lastEyeIcon)
+    $("#bt_make_page_main").addClass('d-none')
+}
+
+function onClearBtnClicked() {
+    if (data[currPage] != undefined) {
+        delete data[currPage]
+
+        fillDataFromLessNearestPage(currPage)
+        var svg = lastSelected.find('svg')
+        svg.css('visibility', 'hidden')
+    }
 }
 
 function onPageClicked(div, pageNum, page) {
@@ -83,32 +94,41 @@ function onPageClicked(div, pageNum, page) {
     onPageChanged(pageNum)
 }
 
+function fillDataFromLessNearestPage(pageNum) {
+
+    let page = 1;
+
+    Object.keys(data).forEach(val => {
+        if (val > page && val < pageNum)
+            page = val;
+    })
+
+    if (page < pageNum)
+        updateSelectListData(data[page].priems)
+    else
+        updateSelectListData()
+}
+
 function onPageChanged(pageNum) {
 
     if (Object.keys(data).length > 0) {
         if (data[pageNum] != undefined) {
             updateSelectListData(data[pageNum].priems)
+            $("#bt_clear_page_data").removeClass('d-none')
         }
         else {
-            let page = 1;
-
-            Object.keys(data).forEach(val => {
-                if (val > page && val < pageNum)
-                    page = val;
-            })
-
-            if (page < pageNum)
-                updateSelectListData(data[page].priems)
-            else
-                updateSelectListData()
+            fillDataFromLessNearestPage(pageNum)
+            $("#bt_clear_page_data").addClass('d-none')
         }
     }
-    //if (state.showPageNumber === pageNum) {
-    //    $("#bt_make_page_main").addClass('d-none')
-    //}
-    //else {
-    //    $("#bt_make_page_main").removeClass('d-none')
-    //}
+    if (item.showPageNumber === pageNum) {
+        $("#bt_make_page_main").addClass('d-none')
+    }
+    else {
+        $("#bt_make_page_main").removeClass('d-none')
+    }
+
+
 }
 
 function checkBoxToggle(checkBox) {
@@ -218,7 +238,11 @@ function onSelectListChanged(e) {
         }
 
     data[currPage].priems = priems
- 
+
+    var svg = lastSelected.find('svg')
+    svg.css('visibility', 'visible')
+
+    $("#bt_clear_page_data").removeClass('d-none')
 }
 
 function onSaveClicked(e) {

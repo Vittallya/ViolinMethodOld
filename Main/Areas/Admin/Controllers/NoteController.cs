@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL;
+using BLL.Comparers;
 using BLL.Dto;
 using DAL.Models;
 using DAL.Repositories;
@@ -47,9 +48,30 @@ namespace Main.Areas.Controllers
                 TakeCount = 15,
                 Views = new string[] { "TableView", "TileView" }
             };
-            model.TotalCount = store.Notes.GetCount();
+            //model.TotalCount = store.Notes.GetCount();
 
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult GetFilterView()
+        {
+            FiltersAllViewModel model = new FiltersAllViewModel();
+            IEnumerable<Priem> priems = store.Priems.GetAll();
+            var groups = priems.
+                GroupBy(x => x.Group, new GenericComparer<PriemGroup>(x => x.Id));
+
+            model.PriemGroups = groups.Select(y =>
+            {
+                PriemGroupViewModel vm = mapper.Map<PriemGroup, PriemGroupViewModel>(y.Key);
+                vm.Priems = y.Select(x => mapper.Map<Priem, PriemViewModel>(x)).ToList();
+                return vm;
+            }).ToList();
+
+            if (IsAjax(Request))
+                return PartialView("FilterView", model);
+
+            return View("FilterView", model);
         }
 
         public ActionResult GetNotes(IndexViewModel model)
@@ -63,10 +85,21 @@ namespace Main.Areas.Controllers
                 GetNotes(model.TakeCount, skip, noteGuids, priems).
                 Select(x => mapper.Map<NoteDto, NoteViewModel>(x));
 
-            if (IsAjax(Request))
-                return PartialView(model.SelectedView, notes);
+            model.Notes = notes;
 
-            return View(model.SelectedView, notes);
+            if(model.Filter == null)
+            {
+                model.TotalCount = store.Notes.GetCount();
+            }
+            else
+            {
+                model.TotalCount = notes.Count();
+            }
+
+            if (IsAjax(Request))
+                return PartialView(model.SelectedView, model);
+
+            return View(model.SelectedView, model);
         }
 
         // GET: NoteController/Details/5
