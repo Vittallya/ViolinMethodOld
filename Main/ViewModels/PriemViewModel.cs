@@ -16,8 +16,10 @@ namespace Main.ViewModels
         [Display(Name = "Название приема")]
         public string Name { get; set; }
 
+        [Display(Name ="Описание")]
         public string Description { get; set; }
 
+        [Display(Name = "Группа")]
         public int GroupId { get; set; }
 
         public IEnumerable<PriemGroupViewModel> Groups { get; set; }

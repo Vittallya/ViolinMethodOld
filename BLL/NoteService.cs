@@ -35,7 +35,9 @@ namespace BLL
         {
             if(store.Notes is LiteDbRepo<Note> repo)
             {
-                var notes = repo.GetNotes(take, skip);
+
+
+                var notes = repo.GetNotes(take, skip, noteIds, priems);
                 return notes.Select(x => mapper.Map<Note, NoteDto>(x));
             }
             throw new ArgumentException("choosen store that isn`t lite database");

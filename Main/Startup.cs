@@ -59,7 +59,7 @@ namespace Main
 
             services.AddDbContext<DbMainContext>(x =>
             {
-                x.UseSqlServer(Configuration.GetConnectionString("Main1"));
+                x.UseSqlServer(Configuration.GetConnectionString("Local"));
             });
 
             var liteDbOpts = Configuration.GetSection(LiteDbConfigOptions.Position).Get<LiteDbConfigOptions>();

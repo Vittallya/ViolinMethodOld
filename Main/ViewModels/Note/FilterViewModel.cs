@@ -11,5 +11,7 @@ namespace Main.ViewModels.Note
         public int[] SelectedDiffLvls { get; set; }
         public Guid[] SelectedGuids { get; set; }
         public int[] SelectedPriems { get; set; }
+
+        public string Test { get; set; }
     }
 }

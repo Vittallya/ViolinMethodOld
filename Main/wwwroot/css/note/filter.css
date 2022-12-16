@@ -1,0 +1,97 @@
+﻿#filters-place {
+    margin: 5px 10px
+}
+
+
+.filter_body {
+    display: block;
+}
+
+
+.filter-display {
+    border-radius: 25px;
+    /*background-color: #ebebeb;*/
+    padding: 2px 10px;
+    margin: 0px 10px;
+    border: 1px solid gray;
+}
+
+    .filter-display span {
+        margin-right: 10px;
+    }
+
+#filterContent {
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+    padding: 5px 15px;
+    border-radius: 7px;
+}
+
+
+#filter-toggle {
+    visibility: collapse;
+}
+
+    #filter-toggle:checked ~ * #filterContainer {
+        display: block;
+    }
+
+#filterContainer {
+    padding: 4px 10px;
+}
+
+#filter-toggle-label {
+    cursor: pointer;
+}
+
+    #filter-toggle-label:hover {
+    }
+
+
+#filter-toggle:checked ~ #filter-toggle-label {
+    /*background-color: rgb(207 103 4 / 50%); background-color: whitesmoke;*/
+}
+
+
+.filter_toggle {
+    display: block;
+}
+
+#section-bt-toggle {
+    align-self: start;
+    right: 10px;
+}
+
+.filter_items {
+    margin: 5px 10px;
+    display: inline-grid;
+}
+
+.filter_section > div {
+    margin-top: 5px;
+}
+
+.filter-header label {
+    transition: all .3s;
+    cursor: pointer;
+}
+
+.input_visible {
+    transform: rotate(180deg);
+}
+
+.filter-header medium {
+    width: 180px;
+}
+
+.filter-header {
+    display: grid;
+    grid-template-columns: 140px 1fr auto
+}
+
+    .filter-header input[type=button] {
+        font-size: 14px;
+        text-decoration: underline;
+        color: #a3a3a3;
+        width: 80px;
+        visibility: hidden
+    }

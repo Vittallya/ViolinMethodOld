@@ -15,8 +15,6 @@ namespace Main.ViewModels.Note
 
         public IEnumerable<string> Views { get; set; }
 
-        public FilterViewModel Filter { get; set; }
-
         //------------------------------------------- меняется сервером:
         public int TotalCount { get; set; }
 

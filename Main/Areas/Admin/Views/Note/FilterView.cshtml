@@ -18,7 +18,7 @@
                         @foreach (var priem in group.Priems)
                         {
                             <li>
-                                <input id="priem_id_@priem.Id" class="link-dark rounded" type="checkbox" />
+                                <input data-priem-id="@priem.Id" data-group-id="@priem.GroupId" id="priem_id_@priem.Id" class="link-dark rounded cb_priem" type="checkbox" />
                                 <label class="link-dark rounded" for="priem_id_@priem.Id">@priem.Name</label>
                             </li>
                         }

@@ -3,14 +3,13 @@
     takeCount: 0,
     currentPage: 1,
     selectedView: null,
-    filters: null,
-    paginationDefined: false
+    paginationDefined: false,
+    selectedPriems: [],
 }
 
 let filtersLoaded = false
 
 function initIndex(curPage, totalItemsCount, take, viewName) {
-    jQuery.ajaxSettings.traditional = true;
     model.currentPage = curPage
     model.selectedView = viewName
     model.takeCount = take
@@ -79,6 +78,8 @@ const getSort = ({ target }) => {
 };
 
 function loadView(data = null, onSuccessFunc = null, url = null) {
+    jQuery.ajaxSettings.traditional = true;
+
     if (url == null)
         url = "/admin/note/getNotes"
 
@@ -89,22 +90,40 @@ function loadView(data = null, onSuccessFunc = null, url = null) {
         url: url,
         data: data,
         success: view => {
-            var root = appendView(view)
-
-            if (model.selectedView == "TableView") {
-                //document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
-                $(".table_sort thead").each((i, e) => e.addEventListener('click', () => getSort(event)))
-            }
-            root.find(".bt_delete_note").on('click', onDelete)
-            root.find(".bt_edit_note").on('click', onEdit)
-
-            definePagination(model.currentPage, Math.ceil(model.totalCount / model.takeCount), $("#p_root"))
-
+            onViewGetted(view)
             if (onSuccessFunc != null)
                 onSuccessFunc(view)
-
         }
     })
+}
+
+function currentReload() {
+    var filtersInput = $('.cb_priem:checked:enabled');
+
+    if (filtersInput.length > 0) {
+        filters = getFilterData(filtersInput, model)
+    }
+    else {
+        delete model.selectedPriems
+    }
+
+    loadView()
+
+    //getTable($('#sel-limit').val(), curPage, filters, curMode)
+}
+
+
+function onViewGetted(view) {
+    var root = appendView(view)
+
+    if (model.selectedView == "TableView") {
+        //document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
+        $(".table_sort thead").each((i, e) => e.addEventListener('click', () => getSort(event)))
+    }
+    root.find(".bt_delete_note").on('click', onDelete)
+    root.find(".bt_edit_note").on('click', onEdit)
+
+    definePagination(model.currentPage, Math.ceil(model.totalCount / model.takeCount), $("#p_root"))
 }
 
 function loadFilters(root) {
@@ -113,6 +132,7 @@ function loadFilters(root) {
             url: "/admin/note/getfilterview",
             success: view => {
                 $(root).empty().append(view)
+                initFilters($(root))
             }
         })
         filtersLoaded = true

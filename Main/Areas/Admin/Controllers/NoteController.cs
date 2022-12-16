@@ -74,12 +74,12 @@ namespace Main.Areas.Controllers
             return View("FilterView", model);
         }
 
-        public ActionResult GetNotes(IndexViewModel model)
+        public ActionResult GetNotes(IndexViewModel model, FilterViewModel filter = null)
         {
             int skip = (model.CurrentPage - 1) * model.TakeCount;
 
-            IEnumerable<Guid> noteGuids = model?.Filter?.SelectedGuids;
-            IEnumerable<int> priems = model?.Filter?.SelectedPriems;
+            IEnumerable<Guid> noteGuids = filter?.SelectedGuids;
+            IEnumerable<int> priems = filter?.SelectedPriems;
 
             var notes = noteService.
                 GetNotes(model.TakeCount, skip, noteGuids, priems).
@@ -87,7 +87,7 @@ namespace Main.Areas.Controllers
 
             model.Notes = notes;
 
-            if(model.Filter == null)
+            if(filter == null)
             {
                 model.TotalCount = store.Notes.GetCount();
             }
