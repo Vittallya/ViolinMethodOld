@@ -77,7 +77,7 @@ function onClearBtnClicked() {
         delete data[currPage]
 
         fillDataFromLessNearestPage(currPage)
-        var svg = lastSelected.find('svg')
+        var svg = lastSelected.find('svg:nth-child(2)')
         svg.css('visibility', 'hidden')
     }
 }
@@ -201,8 +201,11 @@ function fillInputFields(allPriems) {
             select = rootInputs.find(`#select_group_${p.group.id}`)
         }
 
-        select.append($(`<option contextmenu="menu" class="option_priem" id = "option_priem_${p.id}" value=${p.id} >${p.name}</option>`))
+        select.append($(`<option data-priem-id="${p.id}" contextmenu="menu" class="option_priem" id = "option_priem_${p.id}" value=${p.id} >${p.name}</option>`))
     })
+
+
+    rootInputs.find("option").on('contextmenu', rightClick)
 }
 
 function updateSelectListData(priems = null) {
@@ -281,8 +284,37 @@ function onSaveClicked(e) {
     });
 }
 
-//todo проверка при отправке (гл. страница, наличие выбранных нот хотя бы для одной страницы)
-//todo при редактировании страницы - появляется точка
+
+
+
+function hideMenu() {
+    document.getElementById("contextMenu")
+        .style.display = "none"
+}
+
+let priemId = null
+
+function rightClick(e) {
+    e.preventDefault();
+
+
+    console.log(e)
+    priemId = e.currentTarget.getAttribute('data-priem-id')
+
+
+    if (document.getElementById("contextMenu")
+        .style.display == "block")
+        hideMenu();
+    else {
+        var menu = document.getElementById("contextMenu")
+
+        menu.style.display = 'block';
+        menu.style.left = e.pageX + "px";
+        menu.style.top = e.pageY + "px";
+    }
+}
+
+
 
 function getEyeIcon() {
     return $(`
