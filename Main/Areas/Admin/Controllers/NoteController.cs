@@ -6,17 +6,15 @@ using DAL.Models;
 using DAL.Repositories;
 using Main.ViewModels;
 using Main.ViewModels.Note;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Main.Areas.Controllers
 {
@@ -55,6 +53,7 @@ namespace Main.Areas.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult GetFilterView()
         {
             FiltersAllViewModel model = new FiltersAllViewModel();
@@ -75,6 +74,7 @@ namespace Main.Areas.Controllers
             return View("FilterView", model);
         }
 
+        [AllowAnonymous]
         public ActionResult GetNotes(IndexViewModel model, FilterViewModel filter = null)
         {
             int skip = (model.CurrentPage - 1) * model.TakeCount;

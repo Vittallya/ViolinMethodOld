@@ -1,0 +1,26 @@
+﻿@model IndexViewModel
+
+<link href="~/css/note/tileView.css" type="text/css" rel="stylesheet" />
+
+<div class="d-flex flex-wrap justify-start">
+
+
+    @foreach (var item in Model.Notes)
+    {
+        <div class="tile card note_card" onclick="onDetails(this)" data-id="@item.Id">
+
+            <div>
+                <img src="/notefiles/@(item.Id)/images/@(item.ShowPageNumber).jpg" />
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@item.Name</h5>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    model.totalCount = Number(@Model.TotalCount)
+    $("#finded_text").text(model.totalCount)
+    $(".note_card").on('click', onDetails)
+</script>

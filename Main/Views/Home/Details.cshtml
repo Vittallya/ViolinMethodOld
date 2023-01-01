@@ -1,0 +1,85 @@
+﻿@model NoteViewModel
+
+
+<link rel="stylesheet" href="/css/note/details.css" />
+<link rel="stylesheet" href="/css/note/edit.css" />
+<link rel="stylesheet" href="/css/note/edit_context_menu.css" />
+
+<div class="div-header mb-4">
+
+    <div>
+        <button class="bg-transparent border-0" id="bt_back">
+            <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 0 512 512">
+                <path d="M512 256C512 273.7 497.7 288 480 288H160.1l0 72c0 9.547-5.66 18.19-14.42 22c-8.754 3.812-18.95 2.077-25.94-4.407l-112.1-104c-10.24-9.5-10.24-25.69 0-35.19l112.1-104c6.992-6.484 17.18-8.218 25.94-4.406C154.4 133.8 160.1 142.5 160.1 151.1L160.1 224H480C497.7 224 512 238.3 512 256z" />
+            </svg>
+            <span style="margin-left:10px; font-size:18px">На главную</span>
+        </button>
+    </div>
+
+</div>
+
+
+
+<div class="row" id="div_details">
+
+    <div class="itcss col-lg-5 col-xs-12" id="slider-1">
+        <div class="itcss__wrapper">
+            <div id="root_images_slider" class="itcss__items">
+
+            </div>
+        </div>
+        <a class="itcss__control itcss__control_prev" href="#" role="button" data-slide="prev"></a>
+        <a class="itcss__control itcss__control_next" href="#" role="button" data-slide="next"></a>
+
+    </div>
+
+    <div class="row col-lg-6 col-md-12 col-xs-12" id="slider_2">
+
+
+        <div id="root_images" class="div_details_images col-lg-4 col-sm-12  col-xs-12-pull">
+
+        </div>
+
+
+
+        <div id="div-main-img" class="div_details_image col-lg-8 col-sm-12 col-xs-12-push">
+            <canvas id="target-img" style="width: 100%;"></canvas>
+            @*<img id="main-img" class="d-block w-100" alt="/images/default_note.png">*@
+        </div>
+
+    </div>
+
+
+    <div class="div_details_descr col-lg-6 div_details_descr">
+        <div>
+            <div>
+
+                <div id="priems_root" class="mt-3">
+
+                </div>
+
+            </div>
+
+
+            <div class="download-container div_details_section align-items-center">
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    $("#bt_back").on('click', () => {
+        $("body > div").removeClass("container-fluid").addClass("container")
+        clearAjaxView()
+    })
+    @{
+        var clone = Model.Clone() as NoteViewModel;
+        clone.File = null;
+    }
+    initDetails(@Html.Raw(Json.Serialize(clone)))
+
+</script>

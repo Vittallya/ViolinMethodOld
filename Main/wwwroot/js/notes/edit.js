@@ -1,10 +1,5 @@
-﻿let item = null
-let lastSelected = null
-let lastEyeIcon = null
-let currPage = null
-let data = {
+﻿let priemId = null
 
-}
 
 function initEdit(item1) {
     item = item1
@@ -139,18 +134,6 @@ function checkBoxToggle(checkBox) {
         $('#file_change_box').addClass('d-none')
 }
 
-function renderPageToCanvas(page, taregtCanvas) {
-
-    var ctx = taregtCanvas.getContext('2d');
-    var viewport = page.getViewport(1);
-    taregtCanvas.width = viewport.width;
-    taregtCanvas.height = viewport.height;
-
-    page.render({
-        canvasContext: ctx,
-        viewport: viewport
-    });
-}
 
 function editPageIterator(page, pdf, pageNum, root, pageOnClick, isPointVis = false, isMain = false) {
     var pageNum = page.pageIndex + 1;
@@ -285,14 +268,11 @@ function onSaveClicked(e) {
 }
 
 
-
-
 function hideMenu() {
     document.getElementById("contextMenu")
         .style.display = "none"
 }
 
-let priemId = null
 
 function rightClick(e) {
     e.preventDefault();

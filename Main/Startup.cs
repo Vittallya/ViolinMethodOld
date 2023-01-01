@@ -33,26 +33,19 @@ namespace Main
 
             services.AddTransient(x => new Mapper(new MapperConfiguration(x =>
             {
-                x.CreateMap<NoteDto, NoteViewModel>();
-                x.CreateMap<NoteViewModel, NoteDto>();
+                x.CreateMap<NoteDto, NoteViewModel>().ReverseMap();
 
-                x.CreateMap<Note, NoteDto>();
-                x.CreateMap<NoteDto, Note>();
+                x.CreateMap<Note, NoteDto>().ReverseMap();
 
-                x.CreateMap<PageInfo, PageInfoDto>();
-                x.CreateMap<PageInfoDto, PageInfo>();
+                x.CreateMap<PageInfo, PageInfoDto>().ReverseMap();
 
-                x.CreateMap<Priem, PriemDto>();
-                x.CreateMap<PriemDto, Priem>();
+                x.CreateMap<Priem, PriemDto>().ReverseMap();
 
-                x.CreateMap<PriemGroup, PriemGroupDto>();
-                x.CreateMap<PriemGroupDto, PriemGroup>();
+                x.CreateMap<PriemGroup, PriemGroupDto>().ReverseMap();
                 
-                x.CreateMap<Priem, PriemViewModel>();
-                x.CreateMap<PriemViewModel, Priem>();
+                x.CreateMap<Priem, PriemViewModel>().ReverseMap();
 
-                x.CreateMap<PriemGroup, PriemGroupViewModel>();
-                x.CreateMap<PriemGroupViewModel, PriemGroup>();
+                x.CreateMap<PriemGroup, PriemGroupViewModel>().ReverseMap();
 
             })));
 
