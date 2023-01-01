@@ -21,13 +21,13 @@ namespace DAL.Repositories
 
         int GetCount();
 
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<IEnumerable<T>> GetAllClearAsync();
-        Task<T> FindByIdAsync(object id);
-        Task DeleteAsync(object id);
-        Task InsertAsync(T item);
-        Task InsertAsync(IEnumerable<T> items);
-        Task UpdateAsync(T item);
-        Task InsertOrUpdateAsync(T item);
+        //Task<IEnumerable<T>> GetAllAsync();
+        //Task<IEnumerable<T>> GetAllClearAsync();
+        //Task<T> FindByIdAsync(object id);
+        //Task DeleteAsync(object id);
+        //Task InsertAsync(T item);
+        //Task InsertAsync(IEnumerable<T> items);
+        //Task UpdateAsync(T item);
+        //Task InsertOrUpdateAsync(T item);
     }
 }

@@ -83,6 +83,25 @@ function onPageClickedDetails(div, pageNum, page) {
     lastSelected = div
     div.addClass('pdf_page_selected')
     renderPageToCanvas(page, $("#target-img")[0])
+
+    var root = $("#priems_root").empty()
+
+    if (data[pageNum] != undefined) {
+
+        var groups = new Set(data[pageNum].priems.map(x => x.group))
+
+        groups.forEach(g => {
+
+            var priemsRoot = $("<div class='div_details_hashtags'></div>")
+            data[pageNum].priems.filter(x => x.group.id == g.id).forEach(p => {
+                priemsRoot.append($('<div class="div_details_hashtag"></div>').text(p.name))
+            })
+
+            root.append($('<div class="div_details_section"></div>').append($(`<h5>${g.name}</h5>`)).append(priemsRoot))
+        })
+
+        console.log(groups)
+    }
 }
 
 function renderPageToCanvas(page, taregtCanvas) {

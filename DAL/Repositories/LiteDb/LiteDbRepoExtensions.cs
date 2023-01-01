@@ -20,6 +20,7 @@ namespace DAL.Repositories
             var db = priemRepo.Database;
             return db.GetCollection<Note>().
                 Include(BsonExpression.Create("$.PageInfo[*].Priems[*]")).
+                Include(BsonExpression.Create("$.PageInfo[*].Priems[*].Group")).
                 FindById(id);
         }
 
