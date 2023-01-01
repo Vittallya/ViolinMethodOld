@@ -1,4 +1,4 @@
-﻿function initFilters(root) {
+﻿function initFilters(root) {  
     root.find("input[type=checkbox]").on('change', e => {
 
         let checked = e.currentTarget.checked

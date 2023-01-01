@@ -8,6 +8,7 @@
 }
 
 let filtersLoaded = false
+let hasPagination = false
 
 function initIndex(curPage, totalItemsCount, take, viewName) {
     model.currentPage = curPage
@@ -23,6 +24,7 @@ function definePagination(curPage, totalPages, root) {
     if (totalPages == 1)
         return;
 
+    hasPagination = true
     root.append($('<li class="page-item active"></li>').append(`<span class = "page-link">${curPage}</span>`))
     var i = curPage - 1
 

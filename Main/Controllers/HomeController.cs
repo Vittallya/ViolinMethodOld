@@ -13,5 +13,10 @@ namespace Main.Controllers
             ViewData.Add("Title", "Скрипичные приемы");
             return View();
         }
+
+        public ActionResult List()
+        {
+            return View();
+        }
     }
 }

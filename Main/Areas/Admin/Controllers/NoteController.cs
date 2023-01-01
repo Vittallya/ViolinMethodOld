@@ -46,7 +46,8 @@ namespace Main.Areas.Controllers
                 CurrentPage = 1,
                 SelectedView = "TableView",
                 TakeCount = 15,
-                Views = new string[] { "TableView", "TileView" }
+                Views = new string[] { "TableView", "TileView" },
+                TotalCount = store.Notes.GetCount()
             };
             //model.TotalCount = store.Notes.GetCount();
 
@@ -87,7 +88,7 @@ namespace Main.Areas.Controllers
 
             model.Notes = notes;
 
-            if(filter == null)
+            if(filter.SelectedPriems == null)
             {
                 model.TotalCount = store.Notes.GetCount();
             }

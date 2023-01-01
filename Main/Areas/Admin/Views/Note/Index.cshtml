@@ -150,7 +150,7 @@
 
             if (newVal == oldVal || newVal > oldVal && !model.paginationDefined)
                 return
-
+            model.currentPage = 1
             loadView()
         })
 

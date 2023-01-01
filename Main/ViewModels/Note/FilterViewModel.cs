@@ -12,6 +12,6 @@ namespace Main.ViewModels.Note
         public Guid[] SelectedGuids { get; set; }
         public int[] SelectedPriems { get; set; }
 
-        public string Test { get; set; }
+        public bool Setted { get; set; }
     }
 }
