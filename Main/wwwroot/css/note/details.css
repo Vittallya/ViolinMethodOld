@@ -4,8 +4,9 @@
         display: block;
     }
 
-    #slider_2 {
-        display: none;
+    #root_images {
+        display: flex;
+        flex-direction: row-reverse;
     }
 
     .div_details_descr {
@@ -35,9 +36,6 @@
         display: block;
     }
 
-    #slider_2 {
-        display: none;
-    }
 
     .div-header > div:nth-child(1) > a > span {
         display: none;

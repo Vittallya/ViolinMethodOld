@@ -30,7 +30,7 @@ namespace Main.Controllers
         public IActionResult Index()
         {
             ViewData.Add("Title", "Скрипичные приемы");
-            return View();
+            return RedirectToAction(nameof(List));
         }
 
         public ActionResult Details(Guid id)
