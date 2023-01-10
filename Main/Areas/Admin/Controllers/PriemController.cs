@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using BLL.Dto;
 using DAL.Models;
 using DAL.Repositories;
 using Main.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Main.Areas.Admin.Controllers
 {
@@ -143,7 +140,12 @@ namespace Main.Areas.Admin.Controllers
         {
             try
             {
+                store.Priems.GetAllClear().Where(x => x.Group.Id == id).ToList().ForEach(p =>
+                {
+                    store.Priems.Delete(p.Id);
+                });
                 store.PriemGroups.Delete(id);
+                
                 return Ok();
             }
             catch(Exception e)

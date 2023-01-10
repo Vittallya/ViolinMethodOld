@@ -172,10 +172,15 @@ function fillInputFields(allPriems) {
     allPriems.forEach(p => {
 
         var select = null;
+
         if (groups.indexOf(p.group.id) === -1) {
-            let div = $(`<div contextmenu="menu" class = "form-group"></div>`).
-                append($(`<label class="form-label">${p.group.name}</label>`)).
-                append((select = $(`<select id="select_group_${p.group.id}" multiple class = "form-control"></select>`)))
+            let div = $(`<div contextmenu="menu" id="root_group_${p.group.id}" class = "form-group"></div>`)
+                .append($("<div class='d-flex'></div>")
+                    .append($(`<label id="label_group_${p.group.id}" class="form-label">${p.group.name}</label>`))
+                    .append($(`<input type='button' data-group-id = "${p.group.id}" id="bt_edit_group_${p.group.id}" value = "Ред."/>`).on('click', editGroup))
+                    .append($(`<input type='button' data-group-id = "${p.group.id}" id="bt_delete_group_${p.group.id}" value = "Удал."/>`).on('click', deleteGroup)))
+                .append((select = $(`<div id="select_group_${p.group.id}" class = "priems_group_root"></div>`)))
+
             rootInputs.append(div)
             groups.push(p.group.id)
             select.on('change', onSelectListChanged)
@@ -184,24 +189,29 @@ function fillInputFields(allPriems) {
             select = rootInputs.find(`#select_group_${p.group.id}`)
         }
 
-        select.append($(`<option data-priem-id="${p.id}" contextmenu="menu" class="option_priem" id = "option_priem_${p.id}" value=${p.id} >${p.name}</option>`))
+        select
+            .append($('<div class="priem_element"></div>')
+                .append($('<div class="d-flex"></div>')
+                    .append($(`<input data-priem-id="${p.id}" contextmenu="menu" class="option_priem" id = "option_priem_${p.id}" type="checkbox" data-value="${p.id}" value ="${p.id}"/>`))
+                    .append($(`<label for="option_priem_${p.id}">${p.name}</label>`)))
+                .append($(`<input type='button' value='Ред.' data-priem-id="${p.id}"/>`).on('click', editPriem))
+                .append($(`<input type='button' value='Удал.' data-priem-id="${p.id}"/>`).on('click', deletePriem)))
     })
 
-
-    rootInputs.find("option").on('contextmenu', rightClick)
 }
 
 function updateSelectListData(priems = null) {
 
     var root = $("#priems_edit_root")
-    root.find(".option_priem").each((i, e) => {
-        e.selected = false
+    root.find("input").each((i, e) => {
+        //e.selected = false
+        e.checked = false
     })
 
     if (priems != null) {
         priems.forEach(priem => {
             var option = $(`#option_priem_${priem.id}`)[0]
-            option.selected = true
+            option.checked = true
         })
     }
 }
@@ -212,8 +222,8 @@ function onSelectListChanged(e) {
 
     var priems = []
 
-    root.find("option").each((i, e) => {
-        if (e.selected)
+    root.find("input").each((i, e) => {
+        if (e.checked)
             priems.push({ id: Number(e.value) })
     })
     if (data[currPage] == undefined)

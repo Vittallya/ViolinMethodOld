@@ -31,12 +31,14 @@ function initDetails(item1) {
     data = {}
 
     var rootImg = $("#root_images").empty()
+    var rootImgSlider = $("#root_images_slider").empty()
 
     showFilePdf('/notefiles/' + item.id + '/' + item.fileName,
         (page, doc, pageNum) => {
             detailsPageIterator(page, doc, pageNum, rootImg, e => {
                 onPageClickedDetails($(e.currentTarget), pageNum, page)
             }, item.pageInfo.findIndex(y => y.pageNumber === pageNum) > -1, pageNum === item.showPageNumber)
+
         },
         (doc, totalPages) => {
             doc.getPage(item.showPageNumber).
