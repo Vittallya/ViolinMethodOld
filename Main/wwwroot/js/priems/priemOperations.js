@@ -117,18 +117,21 @@ const deleteGroup = e => {
             type: 'POST',
             url: "/admin/priem/deleteGroup/" + groupId,
             success: () => {
-                Object.keys(data).forEach(key => {
-                    $.get({
-                        url: "/admin/priem/GetPriemsAll", success: priems => {
+                $.get({
+                    url: "/admin/priem/GetPriemsAll", success: priems => {
+                        let priemsSet = new Set(priems.map(x => x.id))
 
-                            let priemsSet = new Set(priems)
-                            let result = data[key].priems.filter(pId => priemsSet.has(pId))
+                        Object.keys(data).forEach(key => {
+
+                            let result = data[key].priems.filter(p => priemsSet.has(p.id))
+
+                            //todo если получится, что массив приемов для страницы пустой?
 
                             data[key].priems = result
-                        }
-                    })
-
+                        })
+                    }
                 })
+
                 $("#root_group_" + groupId).remove()
             }
         })
