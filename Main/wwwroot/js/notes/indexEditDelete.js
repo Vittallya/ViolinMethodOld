@@ -5,9 +5,8 @@ function onDelete(e) {
     let id = $(e.currentTarget).attr('data-id')
     let url = "/admin/note/delete/" + id;
 
-    modalSetupSpinner()
-
     if (confirm("Подвердить удаление?")) {
+        modalSetupSpinner()
         $.ajax({
             url: url,
             success: tr => {
@@ -15,7 +14,7 @@ function onDelete(e) {
                 loadView()
             },
             error: e => {
-                modalShowErrors(["Ошибка загрузки"])
+                modalShowErrors(["Ошибка удаления"])
             }
         })
     }
