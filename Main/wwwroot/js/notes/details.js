@@ -88,9 +88,12 @@ function onPageClickedDetails(div, pageNum, page) {
 
     var root = $("#priems_root").empty()
 
+
+
     if (data[pageNum] != undefined) {
 
-        var groups = new Set(data[pageNum].priems.map(x => x.group))
+        var groupsId = Array.from( new Set(data[pageNum].priems.map(x => x.group.id)))
+        var groups = data[pageNum].priems.map(x => x.group).filter((g, i) => groupsId.indexOf(g.id) === i)
 
         groups.forEach(g => {
 

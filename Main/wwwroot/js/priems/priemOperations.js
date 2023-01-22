@@ -126,7 +126,6 @@ const deleteGroup = e => {
                             let result = data[key].priems.filter(p => priemsSet.has(p.id))
 
                             //todo если получится, что массив приемов для страницы пустой?
-
                             data[key].priems = result
                         })
                     }
