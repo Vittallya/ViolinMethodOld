@@ -93,7 +93,15 @@ function onPageClickedDetails(div, pageNum, page) {
     if (data[pageNum] != undefined) {
 
         var groupsId = Array.from( new Set(data[pageNum].priems.map(x => x.group.id)))
-        var groups = data[pageNum].priems.map(x => x.group).filter((g, i) => groupsId.indexOf(g.id) === i)
+        var groups = data[pageNum].priems.map(x => x.group).filter((g, i) => {
+
+            let index = groupsId.indexOf(g.id)
+            if (index > -1) {
+                groupsId.splice(index, 1)
+                return true
+            }
+            return false
+        })
 
         groups.forEach(g => {
 
@@ -104,8 +112,6 @@ function onPageClickedDetails(div, pageNum, page) {
 
             root.append($('<div class="div_details_section"></div>').append($(`<h5>${g.name}</h5>`)).append(priemsRoot))
         })
-
-        console.log(groups)
     }
 }
 
