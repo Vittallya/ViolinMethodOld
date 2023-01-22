@@ -5,11 +5,17 @@ function onDelete(e) {
     let id = $(e.currentTarget).attr('data-id')
     let url = "/admin/note/delete/" + id;
 
+    modalSetupSpinner()
+
     if (confirm("Подвердить удаление?")) {
         $.ajax({
             url: url,
             success: tr => {
+                hideModal()
                 loadView()
+            },
+            error: e => {
+                modalShowErrors(["Ошибка загрузки"])
             }
         })
     }
@@ -18,18 +24,14 @@ function onDelete(e) {
 function onEdit(e) {
     e.stopPropagation()
 
-    //$("#modal_loading").modal('show')
+    modalSetupSpinner()
     let id = $(e.currentTarget).attr('data-id')
     let url = window.location.origin + "/admin/note/edit/" + id;
 
     $.get(url).done(view => {
         placeAjaxView(view)
-        //$('#ajax-content-place').empty().append(page)
-        //$("#modal_loading").modal('hide')
+        hideModal()
     }).fail(err => {
-        //$("#modal_loading").modal('hide')
-        //$("#modal_error").modal('show')
-        //$("#modal_error #modal_error_div > ul").empty().append(`<li>Ошибка</li>`)
+        modalShowErrors(["Ошибка загрузки"])
     })
-
 }

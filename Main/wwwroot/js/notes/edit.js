@@ -243,13 +243,21 @@ function onSelectListChanged(e) {
 
 function onSaveClicked(e) {
 
+    modalSetupSpinner()
+
+
+    var errors = []
+
     if (item.showPageNumber == 0) {
-        alert("Укажите главную страницу")
-        return
+        errors.push('Необходимо выбрать главную страницу')      
     }
 
     if (Object.keys(data) == 0 || Object.keys(data).every(p => data[p].priems.length == 0)) {
-        alert("Хотя бы для одной страницы должен быть указан хотя бы один прием")
+        errors.push('Хотя бы для одной страницы необходимо выбрать хэштеги')        
+    }
+
+    if (errors.length > 0) {
+        modalShowErrors(errors)
         return
     }
 
@@ -271,11 +279,24 @@ function onSaveClicked(e) {
         contentType: false,
         processData: false,
         success: () => {
+            hideModal()
             clearAjaxView()
             loadView()
+        },
+        error: e => {
+            var errorObj = e.responseJSON.errors
+
+            if (errorObj != undefined) {
+                var errors = []
+                Object.keys(errorObj).forEach(key => {
+                    errors = errors.concat(errorObj[key])
+                })
+                modalShowErrors(errors)
+            }
         }
     });
 }
+
 
 
 function hideMenu() {
