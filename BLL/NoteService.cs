@@ -31,13 +31,15 @@ namespace BLL
             return mapper.Map<Note, NoteDto>(note);
         }
 
-        public IEnumerable<NoteDto> GetNotes(int take, int skip, IEnumerable<Guid> noteIds = null, IEnumerable<int> priems = null)
+        public IEnumerable<NoteDto> GetNotes(int take,
+                                             int skip,
+                                             IEnumerable<Guid> noteIds = null,
+                                             IEnumerable<int> priems = null,
+                                             int? groupId = null)
         {
             if(store.Notes is LiteDbRepo<Note> repo)
             {
-
-
-                var notes = repo.GetNotes(take, skip, noteIds, priems);
+                var notes = repo.GetNotes(take, skip, noteIds, priems, groupId).ToList();
                 return notes.Select(x => mapper.Map<Note, NoteDto>(x));
             }
             throw new ArgumentException("choosen store that isn`t lite database");

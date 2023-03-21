@@ -24,13 +24,18 @@ namespace DAL.Repositories
                 FindById(id);
         }
 
-        public static IEnumerable<Note> GetNotes(this LiteDbRepo<Note> noteRepo, int take, int skip, IEnumerable<Guid> guids = null, IEnumerable<int> priems = null)
+        public static IEnumerable<Note> GetNotes(this LiteDbRepo<Note> noteRepo,
+                                                 int take,
+                                                 int skip,
+                                                 IEnumerable<Guid> guids = null,
+                                                 IEnumerable<int> priems = null,
+                                                 int? groupId = null)
         {
             var db = noteRepo.Database;
 
             var coll = db.GetCollection<Note>().Query();
 
-            if (guids == null && priems == null)
+            if (guids == null && priems == null && !groupId.HasValue)
             {
                 return coll.Skip(skip).Limit(take).ToEnumerable();
             }
@@ -58,14 +63,28 @@ namespace DAL.Repositories
                     queryable = coll.Where(all);
                 }
 
+                if(groupId.HasValue)
+                {
+                    //return db.GetCollection<Note>().
+                    //    Include("$.PageInfo[*].Priems[*]").
+                    //    Include("$.PageInfo[*].Priems[*].Group").
+                    //    Find(x => x.PageInfo.Any(x => x.Priems.Any(x => x.Group.Id == groupId.Value)));
+
+                    queryable = coll.
+                        Include("$.PageInfo[*].Priems[*]").
+                        Include("$.PageInfo[*].Priems[*].Group").
+                        Where("$.PageInfo[*].Priems[*].Group.$id ANY = @0", groupId.Value);
+
+                }
+
                 return queryable.ToEnumerable();
             }
 
-            return db.GetCollection<Note>(noteRepo.TableName).
-                Query().
-                Skip(skip).
-                Limit(take).
-                ToEnumerable();
+            //return db.GetCollection<Note>(noteRepo.TableName).
+            //    Query().
+            //    Skip(skip).
+            //    Limit(take).
+            //    ToEnumerable();
         }
     }
 }

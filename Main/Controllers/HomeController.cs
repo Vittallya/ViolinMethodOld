@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL;
+using BLL.Comparers;
 using BLL.Dto;
 using DAL.Models;
 using DAL.Repositories;
@@ -43,6 +44,30 @@ namespace Main.Controllers
 
             return View(noteVm);
         }
+
+        public ActionResult GetAllGropus()
+        {
+
+
+            var notes = store.Notes.GetAll();
+
+            var groups = notes.
+                SelectMany
+                (x => x.PageInfo.
+                SelectMany(x => x.Priems.Select(x => map.Map<PriemGroup, PriemGroupViewModel>(x.Group)))).
+                Distinct(new GenericComparer<PriemGroupViewModel>(x => x.Id));
+
+
+            if (IsAjax(Request))
+                return PartialView("ListGroup", new FiltersAllViewModel { PriemGroups = groups });
+
+            return View("ListGroup", new FiltersAllViewModel { PriemGroups = groups });
+        }
+
+        //public ActionResult GetNotesByGroup(int groupId)
+        //{
+        //    var notes = store.Notes.get
+        //}
 
         public ActionResult List()
         {

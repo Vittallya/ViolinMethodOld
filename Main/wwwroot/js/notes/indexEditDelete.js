@@ -1,4 +1,7 @@
-﻿
+﻿onEditFunc = onEdit;
+onDeleteFunc = onDelete
+
+
 function onDelete(e) {
     e.stopPropagation()
 

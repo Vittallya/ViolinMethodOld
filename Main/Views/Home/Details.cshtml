@@ -12,7 +12,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 0 512 512">
                 <path d="M512 256C512 273.7 497.7 288 480 288H160.1l0 72c0 9.547-5.66 18.19-14.42 22c-8.754 3.812-18.95 2.077-25.94-4.407l-112.1-104c-10.24-9.5-10.24-25.69 0-35.19l112.1-104c6.992-6.484 17.18-8.218 25.94-4.406C154.4 133.8 160.1 142.5 160.1 151.1L160.1 224H480C497.7 224 512 238.3 512 256z" />
             </svg>
-            <span style="margin-left:10px; font-size:18px">На главную</span>
+            <span style="margin-left:10px; font-size:18px">Назад</span>
         </button>
     </div>
 
@@ -60,9 +60,23 @@
 
             </div>
 
-
             <div class="download-container div_details_section align-items-center">
+                <a href="/notefiles/@Model.Id/@System.IO.Path.GetFileName(Model.FileName)" class="btn btn-primary">
 
+                    <div class="d-flex">
+                        
+                    <span>Скачать</span>
+                    <svg version="1.1" viewBox="0 0 50 50" style="fill:white" width="25" height="25" xml:space="preserve">
+                        <g>
+                    <path d="M26.293,46.707c0.092,0.092,0.203,0.165,0.325,0.216C26.74,46.973,26.87,47,27,47s0.26-0.027,0.382-0.077
+		c0.122-0.051,0.233-0.124,0.325-0.216l16-16c0.391-0.391,0.391-1.023,0-1.414s-1.023-0.391-1.414,0L28,43.586V1
+		c0-0.552-0.448-1-1-1s-1,0.448-1,1v42.586L11.707,29.293c-0.391-0.391-1.023-0.391-1.414,0s-0.391,1.023,0,1.414L26.293,46.707z" />
+                    <path d="M43,52H11c-0.552,0-1,0.448-1,1s0.448,1,1,1h32c0.552,0,1-0.448,1-1S43.552,52,43,52z" />
+                        </g>
+                        </svg>
+                    </div>
+
+                </a>
 
             </div>
         </div>
@@ -81,5 +95,34 @@
         clone.File = null;
     }
     initDetails(@Html.Raw(Json.Serialize(clone)))
+
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //    // инициализация слайдера
+    //    var slider = new SimpleAdaptiveSlider('.slider', {
+    //        loop: false,
+    //        autoplay: false,
+    //        interval: 5000,
+    //        swipe: true,
+    //    });
+
+    //    var a = document.getElementsByClassName('slider__item')
+
+    //    var observer = new MutationObserver(function (mutations) {
+    //        mutations.forEach(m => {
+    //            if (m.target.classList.contains('slider__item_active')) {
+    //                console.log(m.target);
+    //            }
+    //        });
+    //    });
+
+    //    Array.from(a).forEach(n => {
+    //        observer.observe(n, {
+    //            attributes: true,
+    //            attributeFilter: ['class']
+    //        });
+
+    //    });
+    //});
 
 </script>

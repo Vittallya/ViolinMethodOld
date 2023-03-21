@@ -299,34 +299,6 @@ function onSaveClicked(e) {
 
 
 
-function hideMenu() {
-    document.getElementById("contextMenu")
-        .style.display = "none"
-}
-
-
-function rightClick(e) {
-    e.preventDefault();
-
-
-    console.log(e)
-    priemId = e.currentTarget.getAttribute('data-priem-id')
-
-
-    if (document.getElementById("contextMenu")
-        .style.display == "block")
-        hideMenu();
-    else {
-        var menu = document.getElementById("contextMenu")
-
-        menu.style.display = 'block';
-        menu.style.left = e.pageX + "px";
-        menu.style.top = e.pageY + "px";
-    }
-}
-
-
-
 function getEyeIcon() {
     return $(`
         <svg height="25" preserveaspectratio="xMidYMid meet" viewbox="0 0 100 100" width="25" x="0" xmlns="http://www.w3.org/2000/svg" y="0">

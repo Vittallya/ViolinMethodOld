@@ -82,13 +82,15 @@ namespace Main.Areas.Controllers
             IEnumerable<Guid> noteGuids = filter?.SelectedGuids;
             IEnumerable<int> priems = filter?.SelectedPriems;
 
+
+
             var notes = noteService.
-                GetNotes(model.TakeCount, skip, noteGuids, priems).
-                Select(x => mapper.Map<NoteDto, NoteViewModel>(x));
+                GetNotes(model.TakeCount, skip, noteGuids, priems, filter.SelectedGroup).ToList();
+                
 
-            model.Notes = notes;
+            model.Notes = notes.Select(x => mapper.Map<NoteDto, NoteViewModel>(x));
 
-            if(filter.SelectedPriems == null)
+            if(filter.SelectedPriems == null && !filter.SelectedGroup.HasValue && filter.SelectedGuids == null)
             {
                 model.TotalCount = store.Notes.GetCount();
             }
@@ -96,6 +98,8 @@ namespace Main.Areas.Controllers
             {
                 model.TotalCount = notes.Count();
             }
+
+
 
             if (IsAjax(Request))
                 return PartialView(model.SelectedView, model);

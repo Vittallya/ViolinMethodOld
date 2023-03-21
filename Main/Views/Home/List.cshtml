@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="~/css/note/filter.css" />
 
 
-<button id="bt_filter_toggle" class="btn btn-toggle align-items-center rounded collapsed" data-toggle="collapse" data-target="#filterContainer" aria-expanded="false">
+<button id="bt_filter_toggle" class="d-none btn btn-toggle align-items-center rounded collapsed" data-toggle="collapse" data-target="#filterContainer" aria-expanded="false">
     Фильтр
     <span class="badge" id="filter-count"></span>
 </button>
@@ -25,28 +25,35 @@
 
     <div class="table col-xm-12 col-sm-12 col-md-12 col-12 col-lg-12 justify-content-end" id="table-div">
 
-        <div class="d-flex flex-wrap justify-content-start">
-
-
-            <div class="d-flex flex-wrap justify-content-start" id="filters-place">
-
+        <div class="d-none" id="div_header_notes">
+            <div class="d-flex">
+                <a id="link_to_groups" href="#"><h3>Главная</h3></a>
+                <h3 class="mr-2 ml-2">/</h3>
+                <h3 id="h3_selected_group_name">Трель</h3>
             </div>
-        </div>
-        <hr />
 
-        <div id="table-panel" class="row">
+            <div class="d-flex flex-wrap justify-content-start">
 
-            <div class="col-xs-4 col-md-3 col-sm-12 col-lg-3 d-flex" style="margin: 5px auto">
-                <span>
-                    Найдено записей:
-                </span>
 
-                <div class="font-weight-bold" style="margin-left: 5px">
-                    <span id="finded_text"></span>
+                <div class="d-flex flex-wrap justify-content-start" id="filters-place">
+
+                </div>
+            </div>
+            <hr />
+
+            <div id="table-panel" class="row">
+
+                <div class="col-xs-4 col-md-3 col-sm-12 col-lg-3 d-flex" style="margin: 5px auto">
+                    <span>
+                        Найдено записей:
+                    </span>
+
+                    <div class="font-weight-bold" style="margin-left: 5px">
+                        <span id="finded_text"></span>
+                    </div>
                 </div>
             </div>
         </div>
-
         <div id="view_root">
 
         </div>
@@ -76,6 +83,12 @@
         $("#sel-limit").val(takeCount)
         $("#finded_text").text(total)
 
+        $("#link_to_groups").on('click', e => {
+            $('#div_header_notes').addClass("d-none")
+            $("#bt_filter_toggle").addClass("d-none")
+            loadView(null, null, "/Home/GetAllGropus")
+        })
+
         $("#bt_filter_toggle").on('click', e => {
             loadFilters($("#root_filter"))
 
@@ -92,7 +105,8 @@
         })
 
         initIndex(curPage, total, takeCount, viewName)
-        loadView()
+        loadView(null, null, "/Home/GetAllGropus")
+
     })
 
 

@@ -7,7 +7,7 @@ namespace BLL
     {
         public PdfService()
         {
-
+            //впичатление 
         }
         public void UnwrapImage(Stream docStream, int page, Stream imgStream, ImageFormat format = null)
         {

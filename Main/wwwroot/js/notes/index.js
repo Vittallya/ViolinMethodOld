@@ -7,6 +7,8 @@
     selectedPriems: [],
 }
 
+let onDeleteFunc, onEditFunc;
+
 let filtersLoaded = false
 let hasPagination = false
 
@@ -122,8 +124,8 @@ function onViewGetted(view) {
         //document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
         $(".table_sort thead").each((i, e) => e.addEventListener('click', () => getSort(event)))
     }
-    root.find(".bt_delete_note").on('click', onDelete)
-    root.find(".bt_edit_note").on('click', onEdit)
+    root.find(".bt_delete_note").on('click', onDeleteFunc)
+    root.find(".bt_edit_note").on('click', onEditFunc)
 
     definePagination(model.currentPage, Math.ceil(model.totalCount / model.takeCount), $("#p_root"))
 }

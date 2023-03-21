@@ -1,0 +1,26 @@
+﻿@model FiltersAllViewModel
+
+<h2>Скрипичные приемы по группам</h2>
+
+<div class="d-flex mt-3">
+    @foreach (var group in Model.PriemGroups)
+    {
+        <a href="#" class="bt_group_link mr-4" data-group-id="@group.Id" data-group-name="@group.Name"><h4>@group.Name</h4></a>
+    }
+</div>
+
+
+<script>
+    $('.bt_group_link').on('click', e => {
+        let gId = e.currentTarget.getAttribute("data-group-id")
+        let gName = e.currentTarget.getAttribute("data-group-name")
+        var data = model
+        data.selectedGroup = gId
+        loadView(data, d => {
+            $('#div_header_notes').removeClass("d-none")
+            $("#h3_selected_group_name").text(gName)
+            $("#bt_filter_toggle").removeClass("d-none")
+        }, null)
+        
+    })
+</script>

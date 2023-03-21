@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using DAL.Repositories.LiteDb;
 using LiteDB;
 using System;
 
@@ -13,7 +14,7 @@ namespace DAL.Repositories
             Database = database;
             Priems = new PriemsRepo(this, database, priemName);
             PriemGroups = new LiteDbRepo<PriemGroup>(this, database, priemGroupName);
-            Notes = new LiteDbRepo<Note>(this, database, notesName);
+            Notes = new NotesRepo(this, database, notesName);
         }
 
         public IStoreRepo<Priem> Priems { get; }

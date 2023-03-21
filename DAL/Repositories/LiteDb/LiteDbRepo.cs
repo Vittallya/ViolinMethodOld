@@ -39,7 +39,7 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             return Database.GetCollection<T>().FindAll();
         }
