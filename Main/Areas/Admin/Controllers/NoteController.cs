@@ -54,12 +54,17 @@ namespace Main.Areas.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetFilterView()
+        public ActionResult GetFilterView(int? gId = null, string view = "FilterView")
         {
             FiltersAllViewModel model = new FiltersAllViewModel();
             IEnumerable<Priem> priems = store.Priems.GetAll();
             var groups = priems.
                 GroupBy(x => x.Group, new GenericComparer<PriemGroup>(x => x.Id));
+
+            if(gId != null)
+            {
+                groups = groups.Where(x => x.Key.Id == gId.Value);
+            }
 
             model.PriemGroups = groups.Select(y =>
             {
@@ -69,9 +74,9 @@ namespace Main.Areas.Controllers
             }).ToList();
 
             if (IsAjax(Request))
-                return PartialView("FilterView", model);
+                return PartialView(view, model);
 
-            return View("FilterView", model);
+            return View(view, model);
         }
 
         [AllowAnonymous]
@@ -99,6 +104,8 @@ namespace Main.Areas.Controllers
                 model.TotalCount = notes.Count();
             }
 
+            if (model.SelectedView == null)
+                return Json(model);
 
 
             if (IsAjax(Request))
@@ -107,10 +114,19 @@ namespace Main.Areas.Controllers
             return View(model.SelectedView, model);
         }
 
+        [AllowAnonymous]
+        public int GetNotesCount(FilterViewModel filter)
+        {
+            IEnumerable<int> priems = filter?.SelectedPriems;
+
+            var notesCount = noteService.GetNotesCount(priems);
+
+            return notesCount;
+        }
+
         // GET: NoteController/Details/5
         public ActionResult Details(Guid id)
         {
-
             return View();
         }
 

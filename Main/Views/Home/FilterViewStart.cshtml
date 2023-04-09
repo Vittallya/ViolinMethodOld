@@ -1,0 +1,29 @@
+﻿@model FiltersAllViewModel
+<div class="flex-shrink-0 p-3">
+    <div class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+    </div>
+
+    <ul class="list-unstyled ps-0 d-flex justify-content-between">
+
+        @foreach (var group in Model.PriemGroups)
+        {
+            <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed" data-toggle="collapse" data-target="#root_group_@group.Id" aria-expanded="true">
+                    @group.Name
+                </button>
+                <div class="collapse show" id="root_group_@group.Id">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                        @foreach (var priem in group.Priems)
+                        {
+                            <li>
+                                <input data-priem-id="@priem.Id" data-group-id="@priem.GroupId" id="priem_id_@priem.Id" class="link-dark rounded cb_priem" type="checkbox" />
+                                <label class="link-dark rounded" for="priem_id_@priem.Id">@priem.Name</label>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

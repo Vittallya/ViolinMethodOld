@@ -11,6 +11,7 @@ namespace BLL
     {
         public NoteDto GetById(Guid id);
         public IEnumerable<NoteDto> GetNotes(int take, int skip, IEnumerable<Guid> noteIds = null, IEnumerable<int> priems = null, int? groupId = null);
+        public int GetNotesCount(IEnumerable<int> priems = null);
         public void InsertOrUpdate(NoteDto model, Guid? guid = null);
     }
 }

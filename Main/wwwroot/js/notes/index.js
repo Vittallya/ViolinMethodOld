@@ -8,6 +8,8 @@
 }
 
 let onDeleteFunc, onEditFunc;
+let selectedGroupId;
+
 
 let filtersLoaded = false
 let hasPagination = false
@@ -127,19 +129,24 @@ function onViewGetted(view) {
     root.find(".bt_delete_note").on('click', onDeleteFunc)
     root.find(".bt_edit_note").on('click', onEditFunc)
 
-    definePagination(model.currentPage, Math.ceil(model.totalCount / model.takeCount), $("#p_root"))
+    //definePagination(model.currentPage, Math.ceil(model.totalCount / model.takeCount), $("#p_root"))
 }
 
-function loadFilters(root) {
-    if (!filtersLoaded) {
+function loadFilters(root, data = null) {
+
+    if (data != null && data.id != selectedGroupId || data == null) {
         $.get({
             url: "/admin/note/getfilterview",
+            data: data,
             success: view => {
+
+                if (data != null && data.id != undefined)
+                    selectedGroupId = data.id;
+
                 $(root).empty().append(view)
                 initFilters($(root))
             }
         })
-        filtersLoaded = true
     }
 }
 

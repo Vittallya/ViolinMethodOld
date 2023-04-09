@@ -41,26 +41,23 @@ namespace DAL.Repositories
             }
             else
             {
-                ILiteQueryable<Note> queryable = default;
-
-                if(priems != null)
+                if(priems != null && priems.Any())
                 {
-                    IEnumerable<BsonExpression> queries = priems.
-                        Select(y => Query.Any().EQ("$.PageInfo[*].Priems[*].$id", new BsonValue(y)));
-                    BsonExpression all = queries.First();
+                    BsonExpression[] expressions = priems.
+                        Select(x => Query.Any().EQ("$.PageInfo[*].Priems[*].$id", x)).
+                        ToArray();
 
-                    queries.Skip(1).Select(y => all = Query.And(all, y));
-                    queryable = coll.Where(all);
+                    BsonExpression query = expressions.Length > 1 ? Query.And(expressions) : expressions[0];
+                    coll = coll.Where(query);
                 }
 
-                if(guids != null)
+                if(guids != null && guids.Any())
                 {
-                    IEnumerable<BsonExpression> queries = guids.
-                        Select(y => Query.Any().EQ("$.id", new BsonValue(y)));
-                    BsonExpression all = queries.First();
-
-                    queries.Skip(1).Select(y => all = Query.And(all, y));
-                    queryable = coll.Where(all);
+                    BsonExpression[] expressions = guids.
+                        Select(x => Query.Any().EQ("$.id", x)).
+                        ToArray();
+                    BsonExpression query = expressions.Length > 1 ? Query.And(expressions) : expressions[0];
+                    coll = coll.Where(query);
                 }
 
                 if(groupId.HasValue)
@@ -70,21 +67,48 @@ namespace DAL.Repositories
                     //    Include("$.PageInfo[*].Priems[*].Group").
                     //    Find(x => x.PageInfo.Any(x => x.Priems.Any(x => x.Group.Id == groupId.Value)));
 
-                    queryable = coll.
+                    coll = coll.
                         Include("$.PageInfo[*].Priems[*]").
                         Include("$.PageInfo[*].Priems[*].Group").
                         Where("$.PageInfo[*].Priems[*].Group.$id ANY = @0", groupId.Value);
 
                 }
 
-                return queryable.ToEnumerable();
+                return coll.ToEnumerable();
             }
+
+            
 
             //return db.GetCollection<Note>(noteRepo.TableName).
             //    Query().
             //    Skip(skip).
             //    Limit(take).
             //    ToEnumerable();
+        }
+
+        public static int GetNotesCount(this LiteDbRepo<Note> repo, IEnumerable<int> priemsId)
+        {
+            var db = repo.Database;
+
+            if(priemsId != null && priemsId.Any())
+            {
+
+                BsonExpression query = default;
+
+                if(priemsId.Count() > 1)
+                {
+                    query = Query.And(priemsId.Select(x => Query.Any().EQ("$.PageInfo[*].Priems[*].$id", x)).ToArray());
+                }
+                else
+                {
+                    query = Query.Any().EQ("$.PageInfo[*].Priems[*].$id", priemsId.First());
+                }
+
+                int count = db.GetCollection<Note>().Query().Where(query).Count();
+                return count;
+
+            }
+            return db.GetCollection<Note>().Count();
         }
     }
 }

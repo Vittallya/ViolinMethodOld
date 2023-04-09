@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using PdfiumViewer;
+using LiteDB;
 
 namespace BLL
 {
@@ -41,6 +42,15 @@ namespace BLL
             {
                 var notes = repo.GetNotes(take, skip, noteIds, priems, groupId).ToList();
                 return notes.Select(x => mapper.Map<Note, NoteDto>(x));
+            }
+            throw new ArgumentException("choosen store that isn`t lite database");
+        }
+        public int GetNotesCount(IEnumerable<int> priems = null)
+        {
+            if(store.Notes is LiteDbRepo<Note> repo)
+            {
+                var notesCount = repo.GetNotesCount(priems);
+                return notesCount;
             }
             throw new ArgumentException("choosen store that isn`t lite database");
         }

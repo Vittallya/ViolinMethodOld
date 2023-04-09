@@ -25,11 +25,9 @@
 
     <div class="table col-xm-12 col-sm-12 col-md-12 col-12 col-lg-12 justify-content-end" id="table-div">
 
-        <div class="d-none" id="div_header_notes">
-            <div class="d-flex">
-                <a id="link_to_groups" href="#"><h3>Главная</h3></a>
-                <h3 class="mr-2 ml-2">/</h3>
-                <h3 id="h3_selected_group_name">Трель</h3>
+        <div id="div_header_notes">
+            <div class="d-flex mb-2">
+                <h3>Скрипичные приемы в произведениях</h3>
             </div>
 
             <div class="d-flex flex-wrap justify-content-start">
@@ -39,9 +37,9 @@
 
                 </div>
             </div>
-            <hr />
+            <hr id="filter_place_line" class="d-none" />
 
-            <div id="table-panel" class="row">
+            <div id="table-panel" class="row d-none">
 
                 <div class="col-xs-4 col-md-3 col-sm-12 col-lg-3 d-flex" style="margin: 5px auto">
                     <span>
@@ -53,8 +51,21 @@
                     </div>
                 </div>
             </div>
+
+            <div id="btn-show" class="row">
+
+                <div class="col-xs-4 col-md-3 col-sm-12 col-lg-3 d-flex" style="margin: 5px auto">
+
+                    <button class="btn btn-info" id="btn_notes_show">
+
+                    </button>
+                </div>
+            </div>
         </div>
         <div id="view_root">
+
+        </div>
+        <div id="filter_start_root">
 
         </div>
 
@@ -69,47 +80,141 @@
 @section Scripts{
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/js/notes/filter.js"></script>
-    <script type="text/javascript" src="~/js/notes/index.js"></script>
-    <script type="text/javascript" src="~/js/notes/details.js"></script>
+    <script type="text/javascript" src="~/js/notes/filter.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/notes/index.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/notes/details.js" asp-append-version="true" ></script>
 
     <script>
+        let isFilterView = true
+        let curPage;
+        let viewName
+        let takeCount;
+        let total;
+        let priems = null
+        let filterView = null
+        let totalCount = 0
+
     $(() => {
-        let total = Number( @Model.TotalCount)
-        let takeCount = Number(@Model.TakeCount)
-        let curPage = Number(@Model.CurrentPage)
-        let viewName = "@Model.SelectedView"
+        total = Number( @Model.TotalCount)
+        takeCount = Number(@Model.TakeCount)
+        curPage = Number(@Model.CurrentPage)
+        viewName = "@Model.SelectedView"
 
         $("#sel-limit").val(takeCount)
         $("#finded_text").text(total)
 
-        $("#link_to_groups").on('click', e => {
-            $('#div_header_notes').addClass("d-none")
-            $("#bt_filter_toggle").addClass("d-none")
-            loadView(null, null, "/Home/GetAllGropus")
-        })
+        //$("#link_to_groups").on('click', e => {
+        //    $('#div_header_notes').addClass("d-none")
+        //    $("#bt_filter_toggle").addClass("d-none")
+        //    loadView(null, null, "/Home/GetAllGropus")
+        //})
 
-        $("#bt_filter_toggle").on('click', e => {
-            loadFilters($("#root_filter"))
+        //$("#bt_filter_toggle").on('click', e => {
+        //    loadFilters($("#root_filter"), {'gId': selectedGroupId})
 
-            let viewDiv = $("#table-div")
+        //    let viewDiv = $("#table-div")
 
-            if (viewDiv.hasClass('col-lg-12')) {
-                viewDiv.removeClass('col-lg-12')
-                viewDiv.addClass('col-lg-9')
+        //    if (viewDiv.hasClass('col-lg-12')) {
+        //        viewDiv.removeClass('col-lg-12')
+        //        viewDiv.addClass('col-lg-9')
+        //    }
+        //    else {
+        //        viewDiv.addClass('col-lg-12')
+        //        viewDiv.removeClass('col-lg-9')
+        //    }
+        //})
+
+        init()
+        $("#btn_notes_show").on('click', e => {
+
+            if(isFilterView){
+                loadView({ selectedPriems: priems, takeCount: totalCount, selectedView: '/Views/Home/TileView.cshtml' })
+                $(e.currentTarget).text("Показать фильтр")
+                $("#filter_start_root").addClass("d-none")
+                    $("#table-panel").removeClass("d-none")
             }
-            else {
-                viewDiv.addClass('col-lg-12')
-                viewDiv.removeClass('col-lg-9')
+            else{
+                $("#view_root").empty()
+                $("#filter_start_root").removeClass("d-none")
+                $("#table-panel").addClass("d-none")
+                getNotesCount(priems)
             }
+            isFilterView = !isFilterView;
         })
-
-        initIndex(curPage, total, takeCount, viewName)
-        loadView(null, null, "/Home/GetAllGropus")
-
     })
 
 
+    function init(){
+
+        jQuery.ajaxSettings.traditional = true;
+        initIndex(curPage, total, takeCount, viewName)
+        $.get({ url: "/admin/note/getfilterview", data: { view: "/Views/Home/FilterViewStart.cshtml" }, success: view => {
+            $("#filter_start_root").empty().append(view)
+            initFilterView()
+            getNotesCount(priems)
+        }})
+    }
+
+
+    function initFilterView() {
+            $(".cb_priem").on('change', e => {
+                let checked = e.currentTarget.checked
+                let priemId = e.currentTarget.getAttribute("data-priem-id")
+                let groupId = e.currentTarget.getAttribute("data-group-id")
+
+                let labelId = priemId + '-title'
+                let labelClass = groupId + '-title'
+
+                if (checked) {
+                    var title = createFilterDisplay(labelId, $(e.currentTarget).next().text(), labelClass,
+                        () => { $(e.currentTarget).prop('checked', false).change(); });
+
+                    $('#filters-place').append(title);
+                }
+                else {
+                    $('#' + labelId).remove();
+                }
+                priems = Array.from($('.cb_priem:checked')).map(x => x.getAttribute('data-priem-id'))
+
+                if(priems.length > 0)
+                    $("#filter_place_line").removeClass("d-none")
+                else
+                    $("#filter_place_line").addClass("d-none")
+
+                if(isFilterView)
+                    getNotesCount(priems)
+                else{
+                    getNotesCount(priems, (answ, isAll) => {
+                        $("#finded_text").text(answ)
+                        loadView({ selectedPriems: priems, takeCount: answ, selectedView: '/Views/Home/TileView.cshtml' })
+                    })
+                }
+            })
+        }
+
+    function getNotesCount(priems, successFunc = null){
+
+        if(successFunc == null)
+            successFunc = updateNotesCount
+
+        $.get({ url: "/admin/note/getnotescount", data: { selectedPriems: priems }, success: answ => successFunc(answ, priems == null || priems.length == 0) })
+    }
+
+    function updateNotesCount(count, isAll = false){
+        totalCount = count
+        if(isFilterView){
+            if(count > 0){
+                $("#btn_notes_show").removeAttr('disabled').text(`Показать ${isAll ? "все" : ""} ноты (${count})`)
+            }
+            else{
+                $("#btn_notes_show").attr('disabled', 'disabled').text(`Нот не найдено`)
+            }
+        }
+    }
+
+    function showBtn(primesId){
+
+    }
 
     function onDetails(e) {
         e.stopPropagation()
